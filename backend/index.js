@@ -1,11 +1,25 @@
 const express = require("express");
 const cors = require("cors");
-const bodyParser = require("body-parser");
+// const bodyParser = require("body-parser");
 const PORT = 8001;
-const { db } = require("./firebase/firebase.js");
-const app = express();app.use(express.json());
+// const { db } = require("./firebase/firebase.js");
+const app = express();
+
+// Use built-in express parsers
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+const allowedOrigins = [
+	"http://localhost:3000",
+  ];
+  
+  const corsOptions = {
+	origin: allowedOrigins,
+	methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+	credentials: true, // to allow cookies to be sent along with requests
+  };
+  
+app.use(cors(corsOptions));
 
 app.listen(PORT, (error) => {
 	if (!error)
