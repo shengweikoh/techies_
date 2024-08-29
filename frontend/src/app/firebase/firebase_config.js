@@ -17,3 +17,9 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 export const storage = getStorage(app);
 const FirestoreDB = getFirestore(app);
+
+export { FirestoreDB, auth };
+
+export const url = "http://localhost:8001";
+
+export default app;
