@@ -1,6 +1,7 @@
 import ResponsiveAppBar from "../../components/user-navbar/navbar";
 import React from 'react';
 import './page.css';
+import Link from "next/link";
 
 export default function Page() {
 
@@ -42,8 +43,8 @@ export default function Page() {
         return (
           <div className="dashboard">
             <div className="dashboard-container">
-              <h2>Ongoing Events</h2>
-              <p>Popular events currently in Singapore</p>
+              <h2>My Events</h2>
+              <p>View your events</p>
               <div>
                 <Card1 />
                 <Card2 />
@@ -52,12 +53,10 @@ export default function Page() {
             </div>
       
             <div className="dashboard-container">
-              <h2>Join an Event</h2>
-              <p>Search for an event to join</p>
+              <h2>Create an Event</h2>
               <div className="dashboard-details">
-                
               </div>
-              <button className="dashboard-button">Book Now</button>
+              <Link href="/admin-create-event"  className="dashboard-button">Create Event</Link>
             </div>
           </div>
         );
