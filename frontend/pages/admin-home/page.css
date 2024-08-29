@@ -1,7 +1,13 @@
+body {
+  background-image: url('/assets/img3.png');
+  background-size: cover;
+  font-family: monospace;
+}
+
 .dashboard {
     background-color: rgba(255, 255, 255, 0.654);
-    border: 1px solid #e0e0e0;
-    border-radius: 10px;
+    border: 2px solid #555353;
+    border-radius: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 30px 60px;
     text-align: left;
@@ -16,6 +22,7 @@
     gap: 40px;
     flex-wrap: wrap;
   }
+
   
   .dashboard-container {
   text-align: left;
@@ -34,10 +41,16 @@
   color: #666;
   margin-bottom: 20px;
   }
-  
+
   .dashboard-details {
   font-size: 18px;
   margin: 20px 0px;
+  }
+
+  .dashboard-cards {
+    display: flex;
+    gap: 20px;
+    flex: 1;
   }
 
   .dashboard-details span {
@@ -67,8 +80,8 @@
 
   .card {
     background-color: white;
-    border: 1px solid #e0e0e0;
-    border-radius: 10px;
+    border: 1px solid #3e3e3e;
+    border-radius: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
     text-align: left;

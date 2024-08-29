@@ -1,4 +1,4 @@
-import ResponsiveAppBar from "../../components/user-navbar/navbar";
+import ResponsiveAppBar from "../../components/admin-navbar/navbar";
 import React from 'react';
 import './page.css';
 import Link from "next/link";
@@ -45,14 +45,11 @@ export default function Page() {
             <div className="dashboard-container">
               <h2>My Events</h2>
               <p>View your events</p>
-              <div>
+              <div className="dashboard-cards">
                 <Card1 />
                 <Card2 />
                 <Card3 />
               </div>
-            </div>
-      
-            <div className="dashboard-container">
               <h2>Create an Event</h2>
               <div className="dashboard-details">
               </div>
