@@ -4,8 +4,6 @@ const cors = require("cors");
 const PORT = 8001;
 // const { db } = require("./firebase/firebase.js");
 const app = express();
-
-// Use built-in express parsers
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
