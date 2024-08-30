@@ -44,6 +44,19 @@ export default function Login() {
     }
   };
 
+  // Updated Google login function
+  const handleGoogleLogin = async (event) => {
+    event.preventDefault();
+    console.log("Google login");
+    // Use next-auth's signIn function for Google login
+    await signIn('google');
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setError(null);
+  };
+
   return (
     <div className={styles.container}>
       <form onSubmit={handleLogin} className={styles.form}>
@@ -73,6 +86,11 @@ export default function Login() {
         </div>
         <button type="submit" className={styles.button}>
           Login
+        </button>
+        {/* Moved Google login button here */}
+        <div className={styles.or}>or</div>
+        <button className={styles.googleButton} onClick={handleGoogleLogin}>
+          Sign in with Google
         </button>
       </form>
     </div>

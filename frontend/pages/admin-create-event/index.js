@@ -1,7 +1,8 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import './page.css';
-import ResponsiveAppBar from '../../components/user-navbar/navbar';
+import ResponsiveAppBar from '../../components/admin-navbar/navbar';
+import Link from "next/link";
 
 export default function Page() {
     const Dashboard = () => {
@@ -159,7 +160,7 @@ export default function Page() {
                     </div>
                 </div>
                 <div>
-                    <button type="submit" className='dashboard-button'>Continue</button>
+                    <Link href="/admin-create-map"  className="dashboard-button">Continue</Link>
                 </div>
                 </form>
             </div>

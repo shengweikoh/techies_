@@ -79,7 +79,7 @@ function ResponsiveAppBar() {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-          <Link href="../../user-home" style={{textDecoration: "none"}}>
+          <Link href="../../staff-home" style={{textDecoration: "none"}}>
             <Typography
               variant="h6"
               noWrap
