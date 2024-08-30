@@ -3,12 +3,15 @@ const {getAdminProfile, updateAdminProfile, getAdminEvent, createAdminProfile} =
 
 const router = express.Router();
 
-router.get('/', getAdminProfile);
+// http://localhost:8001/admin/profile?adminID=
+router.get('/profile', getAdminProfile);
 
-router.get('/update', updateAdminProfile);
+// http://localhost:8001/admin/update?adminID=
+router.post('/update', updateAdminProfile);
 
+// http://localhost:8001/admin/adminEvent?adminID=
 router.get('/adminEvent', getAdminEvent);
 
-router.get('/createAdmin', createAdminProfile)
+router.post('/createAdmin', createAdminProfile)
 
 module.exports = router;

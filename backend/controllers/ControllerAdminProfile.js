@@ -2,12 +2,17 @@
 const {db} = require("../firebase/firebase.js");
 
 const getAdminProfile = async (req, res) => {
-    const adminID = req.query.id;
+    const adminID = req.query.adminID;
+
+    if (!adminID || typeof adminID !== 'string' || adminID.trim() === '') {
+        return res.status(400).json({ 
+            code: 400, 
+            message: "Invalid or missing admin ID"
+        });
+    }
+
     try {
         const admin = await db.collection("Admin").doc(adminID).get();
-        if (!admin.exists) {
-            return res.status(404).json({ code: 404, message: "Admin not found" });
-        }
 
         const adminDetails = admin.data();
         const adminEvent = await db.collection("Admin").doc(adminID).collection("EventIC").get();
@@ -25,9 +30,17 @@ const getAdminProfile = async (req, res) => {
         return res.status(500).json({code: 500, message: `Error getting admin: ${error} `})
     }
 }
+
 const updateAdminProfile = async (req, res) => {
-    const adminID = req.query.id;
+    const adminID = req.query.adminID;
     const { Email, Name, Phone } = req.body;
+
+    if (!adminID || typeof adminID !== 'string' || adminID.trim() === '') {
+        return res.status(400).json({ 
+            code: 400, 
+            message: "Invalid or missing admin ID"
+        });
+    }
 
     if (!Email || !Name || !Phone) {
 		return res
@@ -38,43 +51,59 @@ const updateAdminProfile = async (req, res) => {
 					"User updated email/name/phone required",
 			});
 	}
+
     try {
-        await db.collection("Admin").doc(adminID).update({
+        // Check if the admin document exists
+        const adminRef = db.collection("Admin").doc(adminID);
+        const adminDoc = await adminRef.get();
+
+        if (!adminDoc.exists) {
+            return res.status(404).json({
+                code: 404,
+                message: "Admin not found.",
+            });
+        }
+
+        // Update the admin profile with new values
+        await adminRef.update({
             Email: Email,
             Name: Name,
             Phone: Phone,
         });
+
         return res.status(200).json({
             code: 200,
-            message: "User profile successfully updated.",
+            message: "Admin profile successfully updated.",
         });
     } catch (error) {
-        console.error("Error updating user profile:", error);
+        console.error("Error updating admin profile:", error);
         return res.status(500).json({
             code: 500,
-            message: `Error updating user profile: ${error.message}`,
+            message: `Error updating admin profile: ${error.message}`,
         });
     }
 }
+
 const getAdminEvent = async (req, res) => {
-    const adminID = req.query.id;
+    const adminID = req.query.adminID;
     try {
         const admin = await db.collection("Admin").doc(adminID).get();
         if (!admin.exists) {
             return res.status(404).json({ code: 404, message: "Admin not found" });
         }
-        const adminEvent = await db.collection("Admin").doc(adminID).collection("EventIC").get();
-        const validAdminEvent = adminEvent.empty 
-        ? [] // Return an empty array if no documents are found
-        : adminEvent.docs.map(doc => doc.data()); // Map document data to an array
+        const adminEventSnapshot = await db.collection("Admin").doc(adminID).collection("EventIC").get();
+        const eventIDs = adminEventSnapshot.empty 
+            ? [] // If empty, return an empty array
+            : adminEventSnapshot.docs.map(doc => doc.data().EventID); // Extract the EventID field
 
         return res.status(200).json({
-            validAdminEvent: validAdminEvent
+            eventIDs: eventIDs // Send back the array of Event IDs
         });
     } catch (error) {
         return res.status(500).json({code: 500, message: `Error getting admin: ${error} `})
     }
 }
+
 const createAdminProfile = async (req, res) => {
     const { Email, Name, Phone } = req.body;
 
