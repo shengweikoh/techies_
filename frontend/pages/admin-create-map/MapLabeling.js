@@ -73,6 +73,19 @@ const MapLabeling = () => {
     }
   };
 
+  const createEvent = async () => {
+    try {
+      const response = await axios.post('http://localhost:8001/markers/createEvent');
+      console.log('Event successfully created:', response.data);
+
+      // Save the eventID in session storage
+      sessionStorage.setItem('eventID', response.data.eventID);
+      alert(`Event created with ID: ${response.data.eventID}`);
+    } catch (error) {
+      console.error('Error creating event:', error);
+    }
+  };
+
   return (
     <div>
       <div className="color-selector">
@@ -88,7 +101,7 @@ const MapLabeling = () => {
         <br />
         <div className="color-preview" style={{ backgroundColor: selectedColor }}></div>
       </div>
-    
+
       <MapContainer center={[51.50, -0.07]} zoom={14} style={{ height: "600px", width: "100%" }}>
         {bounds.length > 0 && (
           <ImageOverlay
@@ -120,9 +133,13 @@ const MapLabeling = () => {
         ))}
       </MapContainer>
 
-      <br></br>
+      <br />
       <button onClick={exportMarkersToDatabase} className='dashboard-button'>
         Complete Event
+      </button>
+
+      <button onClick={createEvent} className='dashboard-button'>
+        Create Event
       </button>
     </div>
   );

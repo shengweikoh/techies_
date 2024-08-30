@@ -39,6 +39,40 @@ const markerUpdate = async (req, res) => {
     }
 };
 
+// controllers/markerUpdateController.js
+const createEvent = async (req, res) => {
+    // Destructure event details from request body
+    const { AgeLimit, Capacity, Description, EndDT, Location, Name, Organiser, OrganiserContact, Price, StartDT } = req.body;
+  
+    try {
+      // Create a new document in the "Events" collection with the provided data
+      const eventDocRef = await db.collection('Events').add({
+        AgeLimit: Number(AgeLimit),
+        Capacity: Number(Capacity),
+        Description: Description,
+        EndDT: new Date(EndDT),
+        Location: Location,
+        Name: Name,
+        Organiser: Organiser,
+        OrganiserContact: Number(OrganiserContact),
+        Price: Number(Price),
+        StartDT: new Date(StartDT),
+        createdAt: new Date(),
+      });
+  
+      // Get the generated ID of the new document
+      const eventID = eventDocRef.id;
+      console.log('Event created with ID:', eventID);
+  
+      // Send the event ID back to the client
+      return res.status(200).json({ eventID: eventID, message: "Event successfully created" });
+    } catch (error) {
+      console.error('Error creating event:', error);
+      return res.status(500).json({ code: 500, message: `Error creating event: ${error.message}` });
+    }
+  };
+
 module.exports = {
     markerUpdate,
+    createEvent,
 };
