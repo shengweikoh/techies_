@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import './page.css';
-import ResponsiveAppBar from '../../components/user-navbar/navbar';
+import ResponsiveAppBar from '../../components/admin-navbar/navbar';
 import Link from "next/link";
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CreateIcon from '@mui/icons-material/Create';

@@ -1,7 +1,8 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import './page.css';
-import ResponsiveAppBar from '../../components/user-navbar/navbar';
+import ResponsiveAppBar from '../../components/admin-navbar/navbar';
+import Link from "next/link";
 
 export default function Page() {
     const Dashboard = () => {
