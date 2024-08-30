@@ -159,7 +159,7 @@ export default function Page() {
                     </div>
                 </div>
                 <div>
-                    <button type="submit" className='dashboard-button'>Continue</button>
+                    <Link href="/admin-create-map"  className="dashboard-button">Continue</Link>
                 </div>
                 </form>
             </div>
