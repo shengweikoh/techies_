@@ -1,5 +1,8 @@
+@import url('https://fonts.cdnfonts.com/css/lustria'); /*header font */
+@import url('https://fonts.cdnfonts.com/css/tt-hoves-pro-trial'); /*body font*/
+
 .container {
-  font-family: 'Times New Roman', Times, serif;
+  font-family: 'TT Hoves Pro Trial', sans-serif;
   font-size: large;
   text-align: center;
   display: flex;
@@ -8,12 +11,13 @@
   height: 100vh;
   background-color: #ffffff93;
   background-image: url('./img1.png');
-  background-size: 90%;
+  background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
   background-blend-mode: darken;
   border-radius: 25px;
   overflow: hidden;
+  
 }
 
 .form {
@@ -22,6 +26,8 @@
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 80%;
+  max-width: 500px;
+  padding-left: 50px;
   max-width: 500px;
 }
 
@@ -34,8 +40,12 @@
   display: block;
   margin-bottom: 0.5rem;
   font-size: 1rem;
-  padding-left: 19px;
+  padding-left: 10px; /* Reduced padding to move label more to the left */
   color: #333;
+}
+
+.form .label {
+  padding-left: 2px;  /* Reduced for more alignment to the left */
 }
 
 .input {
@@ -44,28 +54,74 @@
   border-radius: 4px;
   border: 1px solid #cccc;
   font-size: 1rem;
+  margin: 0 auto;
 }
 
 .checkboxContainer {
   text-align: left;
   margin-bottom: 1rem;
+  font-size: 1rem;
 }
 
-.button, .googleButton {
+.button {
   font-family: 'Poppins', sans-serif;
   width: 100%;
   padding: 0.75rem;
   border: none;
   border-radius: 4px;
-  background-color: #333;
+  background-color: #37452b;
   color: #fff;
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  margin-bottom: 8px; /* Adds space below the 'Login' button */
+  margin-top: 10px;
+}
+.googleButton {
+  display: flex;
+  border-radius: 4px;
+  width: 100%;
+  padding: 0.75rem;
+  align-items: center;
+  justify-content: center;
+  background-color: #4285F4; /* Google's brand color */
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
 }
 
-.button:hover, .googleButton:hover {
-  background-color: #555;
+.googleButton svg {
+  margin-right: 10px; /* Space between the icon and text */
+}
+
+
+.button:hover {
+  background-color: #8f8e8e;
+}
+
+.googleButton:hover {
+  background-color: #98bbf4;
+}
+.or {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 5px 0;  
+  font-size: 0.9rem; 
+  color: #666;  
+}
+
+
+.signUpLink {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.signUpLink span {
+  color: #3109b5;
+  cursor: pointer;
 }
 
 .error {
@@ -83,8 +139,9 @@
       padding: 0.5rem;
   }
   
-  .button, .googleButton {
+  .button {
       padding: 0.5rem;
       font-size: 0.9rem;
   }
 }
+
