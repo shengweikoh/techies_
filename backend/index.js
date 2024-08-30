@@ -54,7 +54,7 @@ app.get("/", (req, res) => {
 // // for all to view event detail
 // app.use("/event/detail", require("./routers/eventDetailsRouter.js"));
 
-app.use("/marker", require("./routers/markerUpdateRoute.js"));
+app.use("/markers", require("./routers/markerUpdateRoute.js"));
 
 module.exports = app;
 
