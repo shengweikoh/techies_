@@ -159,7 +159,7 @@ export default function Page() {
                     </div>
                 </div>
                 <div>
-                    <button type="submit" className='dashboard-button'>Save Changes</button>
+                    <button type="submit" className='dashboard-button'>Continue</button>
                 </div>
                 </form>
             </div>
