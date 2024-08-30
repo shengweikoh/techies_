@@ -6,7 +6,7 @@ import AdminRoute from '../src/app/components/routeProtection/AdminRoute';
 import '../src/app/components/routeProtection/popup.css';
 
 // Routes that don't require authentication
-const noAuthRequired = ['/', '/login']; 
+const noAuthRequired = ['/', '/login', '/signup']; 
 // Routes that require user authentication
 const userRoutes = ['/user-home', '/user-view-event'];
 // Routes that require admin authentication
