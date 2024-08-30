@@ -4,9 +4,12 @@ import StaffRoute from '../src/app/components/routeProtection/StaffRoute';
 import UserRoute from '../src/app/components/routeProtection/UserRoute';
 import AdminRoute from '../src/app/components/routeProtection/AdminRoute';
 import '../src/app/components/routeProtection/popup.css';
+import MapComponent from './map';
+import { ChakraProvider } from '@chakra-ui/react';
+
 
 // Routes that don't require authentication
-const noAuthRequired = ['/', '/login', '/signup']; 
+const noAuthRequired = ['/', '/login', '/signup', '/map']; 
 // Routes that require user authentication
 const userRoutes = ['/user-home', '/user-view-event'];
 // Routes that require admin authentication
@@ -55,7 +58,14 @@ function MyApp({ Component, pageProps }) {
         return null; // Optionally, return a loading spinner or similar
     }
 
-    return <>{getProtectedRoute()}</>;
+    return (
+        <>
+        <ChakraProvider>
+            {getProtectedRoute()}
+            <MapComponent />
+        </ChakraProvider>
+        </>
+    );
 }
 
 export default MyApp;
