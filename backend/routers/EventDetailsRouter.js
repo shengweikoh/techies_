@@ -1,5 +1,3 @@
-
-
 const express = require("express");
 const { getEventDetails } = require("../controllers/ControllerEventDetail.js"); // Ensure this import path is correct
 
