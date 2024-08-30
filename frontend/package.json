@@ -9,13 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@mui/icons-material": "^6.0.0",
     "@mui/material": "^6.0.0",
     "@mui/styled-engine-sc": "^6.0.0",
+    "@react-google-maps/api": "^2.19.3",
     "axios": "^1.7.5",
     "firebase": "^10.13.0",
+    "frontend": "file:",
     "next": "14.2.7",
     "next-auth": "^4.24.7",
     "react": "^18",

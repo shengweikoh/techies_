@@ -8,6 +8,11 @@ import CreateIcon from '@mui/icons-material/Create';
 import { Box } from "@mui/material";
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import axios from 'axios';
+import Image from 'next/image';
+import dynamic from 'next/dynamic';
+
+// Dynamically import the MapLabeling component with ssr: false
+const MapLabeling = dynamic(() => import('./MapLabeling'), { ssr: false });
 
 
 export default function Page() {
@@ -86,12 +91,24 @@ export default function Page() {
         <div className="dashboard">
             <div className="dashboard-container">
                 <Box display="flex" alignItems="center" gap="15px">
-                <LocationOnIcon fontSize="large"/>
-                <h2>Create Map</h2>
+                    <LocationOnIcon fontSize="large"/>
+                    <h2>Create Map</h2>
                 </Box>
                 <p>Upload an image of your event map</p>
                 <button className='dashboard-button' onClick={togglePicture}>Add Map</button>
-
+                {/* <div className='image-container'>
+                    <img 
+                        src="/assets/sketch1.jpg" 
+                        alt="Map Image" 
+                        style={{
+                            width: '100%',
+                            height: 'auto'
+                        }}
+                    />
+                </div> */}
+                <div>
+                    <MapLabeling />
+                </div>
 
                 <div id="pictureOverlay" className={`picture-overlay ${isPictureVisible ? 'show' : ''}`}>
                     <div className='picture-box'>
@@ -112,8 +129,9 @@ export default function Page() {
                 </div>
                 
                 {/* <Link href="/admin-create-event"  className="dashboard-button">Create Event</Link> */}
+                
             </div>
-            </div>
+        </div>
         );
     };
 
