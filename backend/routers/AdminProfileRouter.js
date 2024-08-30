@@ -1,5 +1,5 @@
 const express = require("express");
-const {getAdminProfile, updateAdminProfile, getAdminEvent, createAdminProfile} = require("../controllers/ControllerGetAdmin.js");
+const {getAdminProfile, updateAdminProfile, getAdminEvent, createAdminProfile} = require("../controllers/ControllerAdminProfile.js");
 
 const router = express.Router();
 
