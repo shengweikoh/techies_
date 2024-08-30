@@ -20,7 +20,7 @@ const getEventDetails = async (req, res) => {
         const eventAgeLimit = eventDetails.AgeLimit || null;
 
         return res.status(200).json({
-            id: event.id,
+            id: eventID,
             startDateTime: startDateTime,
             endDateTime: endDateTime,
             eventName: eventName,
