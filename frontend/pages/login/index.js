@@ -1,5 +1,6 @@
 "use client";
 
+import { FaGoogle } from 'react-icons/fa';
 import React, { useState } from 'react';
 import styles from './page.module.css';
 import { useRouter } from 'next/router';
@@ -112,7 +113,7 @@ export default function Login() {
   return (
     <div className={styles.container}>
       <form onSubmit={handleLogin} className={styles.form}>
-        <h2>Login to 'app name'</h2>
+        <h2>Login Page</h2>
         {error && <p className={styles.error}>{error}</p>}
         <div className={styles.inputGroup}>
           <label htmlFor="email" className={styles.label}>Email:</label>
@@ -150,9 +151,15 @@ export default function Login() {
           Login
         </button>
         <div className={styles.or}>or</div>
+        
         <button className={styles.googleButton} onClick={handleGoogleLogin}>
-          Sign in with Google
+          <FaGoogle />
+          <span>Login with Google</span>
         </button>
+        
+        <div className={styles.signUpLink}>
+          Don't have an account? <span onClick={() => router.push('/signup')}>Sign Up</span>
+        </div>
       </form>
     </div>
   );

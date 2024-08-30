@@ -1,5 +1,9 @@
+@import url('https://fonts.cdnfonts.com/css/lustria'); /*header font */
+@import url('https://fonts.cdnfonts.com/css/tt-hoves-pro-trial'); /*body font*/
+
+
 .container {
-    font-family:'Times New Roman', Times, serif;
+    font-family: 'TT Hoves Pro Trial', sans-serif;
     font-size: large;
     text-align: center;
     display: flex;
@@ -8,7 +12,7 @@
     height: 100vh;
     background-color: #ffffff93;
     background-image: url('./img1.png');
-    background-size: 90%;
+    background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
     background-blend-mode: darken;
@@ -49,6 +53,7 @@
 .checkboxContainer {
     text-align: left;
     margin-bottom: 1rem;
+    font-size: 1rem;
 }
 
 .button {
@@ -57,7 +62,7 @@
     padding: 0.75rem;
     border: none;
     border-radius: 4px;
-    background-color: #333;
+    background-color:  #37452b;
     color: #fff;
     font-size: 1rem;
     cursor: pointer;
@@ -65,7 +70,7 @@
 }
 
 .button:hover {
-    background-color: #555;
+    background-color: #8f8e8e;
 }
 
 .error {
