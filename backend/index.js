@@ -32,7 +32,7 @@ app.get("/", (req, res) => {
 	res.status(200).json("Welcome, your app is working well");
 });
 
-// app.use("/controllers/ControllerEventDetail", require("./routers/EventDetailsRouter.js"));
+app.use("/controllers/ControllerEventDetail", require("./routers/eventDetailsRouter.js"));
 // app.use("/controllers/ControllerAdminProfile", require("./routers/AdminProfileRouter.js"));
 // app.use("/controllers/ControllerStaffProfile", require("./routers/StaffProfileRouter.js"));
 // app.use("/controllers/ControllerUserProfile", require("./routers/UserProfileRouter.js"));
