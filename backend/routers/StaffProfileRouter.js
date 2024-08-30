@@ -9,6 +9,6 @@ router.get('/update', updateStaffProfile);
 
 router.get('/staffEvent', getStaffEvent);
 
-route.get('/createStaff', createStaffProfile);
+router.get('/createStaff', createStaffProfile);
 
 module.exports = router;

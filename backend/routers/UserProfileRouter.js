@@ -5,10 +5,10 @@ const router = express.Router();
 
 router.get('/', getUserProfile);
 
-route.get('/update', updateUserProfile);
+router.get('/update', updateUserProfile);
 
-route.get('/userEvent', getUserEvent);
+router.get('/userEvent', getUserEvent);
 
-route.get('/createUser', createUserProfile);
+router.get('/createUser', createUserProfile);
 
 module.exports = router;
