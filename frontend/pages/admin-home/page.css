@@ -83,18 +83,16 @@ body {
   }
 
   .card {
-    display: flex;
-    flex-direction: column;
+    background-color: white;
     border: 1px solid #3e3e3e;
-    justify-content: space-between; /* This makes sure the button is pushed to the bottom */
-    padding: 20px;
-    border-radius: 8px;
-    background-color: #fff; /* Assuming a white background */
+    border-radius: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    height: 300px; /* Fixed height for all cards */
-    width: 270px; /* Fixed width for all cards */
-    margin: 10px; /* Adds space between cards */
-}
+    padding: 20px;
+    text-align: left;
+    margin-bottom: 20px;
+    flex: 1;
+    max-width: 33%;
+  }
   
   .card h2 {
     font-size: 24px;
@@ -126,27 +124,16 @@ body {
     color: white;
     border: none;
     padding: 10px 20px;
+    text-align: center;
     font-size: 16px;
     border-radius: 5px;
     cursor: pointer;
     text-decoration: none;
+    width: 100%;
   }
-  .card-button {
-    margin-top: auto; /* This pushes the button to the bottom */
-    width: 100%; /* Ensures button stretches to the width of the card */
-    padding: 10px 0; /* Padding for better button size */
-    background-color: rgb(60, 79, 110);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
+  
   .card-button:hover {
     background-color: #333;
   }
 
-  .p-events {
-    text-align: left;  
-    margin-left: 17px; 
-}
 
