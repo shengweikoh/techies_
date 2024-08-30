@@ -13,14 +13,19 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { useRouter } from 'next/router';
+import FBInstanceAuth from "../../src/app/firebase/firebase_auth";
+import { signOut } from 'firebase/auth';
 
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const router = useRouter(); // Initialize useRouter
+  const [error, setError] = useState(null);
+  const auth = FBInstanceAuth.getAuth();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -38,8 +43,28 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
-  const handleLogout = () => {
-    
+  const handleLogout = async (event) => {
+    event.preventDefault();
+    setError(null);
+  
+    try {
+        await signOut(auth); // Use signOut directly from firebase/auth
+        console.log('User signed out from Firebase');
+        
+        localStorage.removeItem('userToken'); // Clear the token from local storage
+        console.log('userToken removed from localStorage');
+        
+        localStorage.removeItem('userDocID'); // Clear the userDocID from local storage
+        console.log('userDocID removed from localStorage');
+  
+        localStorage.removeItem('userRole'); // Clear the userRole from local storage
+        console.log('userToken removed from localStorage');
+  
+        router.push('/login');
+    } catch (error) {
+        setError(`Unexpected error: ${error.message}`);
+        console.error('Error during logout:', error);
+    }
   };
 
   return (
