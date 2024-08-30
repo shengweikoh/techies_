@@ -6,7 +6,7 @@ const getUserProfile = async (req, res) => {
     try {
         const user = await db.collection("User").doc(userID).get();
         if (!user.exists) {
-            return res.status(404).json({ code: 404, message: "Event not found" });
+            return res.status(404).json({ code: 404, message: "User not found" });
         }
 
         const userDetails = user.data();
@@ -60,11 +60,9 @@ const getUserEvent = async (req, res) => {
     try {
         const user = await db.collection("User").doc(userID).get();
         if (!user.exists) {
-            return res.status(404).json({ code: 404, message: "Event not found" });
+            return res.status(404).json({ code: 404, message: "User not found" });
         }
-
-        const userDetails = user.data();
-        const userEvent = await db.collection("Admin").doc(userID).collection("Events").get();
+        const userEvent = await db.collection("User").doc(userID).collection("Events").get();
         const validUserEvent = userEvent.empty 
         ? [] // Return an empty array if no documents are found
         : userEvent.docs.map(doc => doc.data()); // Map document data to an array
@@ -76,11 +74,43 @@ const getUserEvent = async (req, res) => {
         return res.status(500).json({code: 500, message: `Error getting user: ${error} `})
     }
 }
+const createUserProfile = async (req, res) => {
+    const { EContact, Email, Name, Phone } = req.body;
+
+    if (!EContact || !Email || !Name || !Phone) {
+        return res.status(400).json({
+            code: 400,
+            message: "Emergency contact and Email, Name, and Phone are required to create a user profile.",
+        });
+    }
+
+    try {
+        const newUserRef = await db.collection("User").add({
+            EContact,
+            Email,
+            Name,
+            Phone,
+        });
+
+        return res.status(201).json({
+            code: 201,
+            message: "User profile successfully created.",
+            UserID: newUserRef.id,
+        });
+    } catch (error) {
+        console.error("Error creating user profile:", error);
+        return res.status(500).json({
+            code: 500,
+            message: `Error creating user profile: ${error.message}`,
+        });
+    }
+}
 
 module.exports = {
     getUserProfile,
     updateUserProfile,
-    getUserEvent
+    getUserEvent,
+    createUserProfile
 }
 
 
