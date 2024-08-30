@@ -1,53 +1,29 @@
-// import React from "react";
-
-// function MyApp({ Component, pageProps }) {
-//     return <Component {...pageProps} />;
-// }
-
-// export default MyApp;
-
-// import React from 'react';
-// import { useRouter } from 'next/router';
-// import ProtectedRoute from '../src/app/components/ProtectedRoute';
-
-// const noAuthRequired = ['/', '/login'];
-
-// function MyApp({ Component, pageProps }) {
-//     const router = useRouter();
-
-//     return (
-//         <>
-//             {noAuthRequired.includes(router.pathname) ? (
-//                 <Component {...pageProps} />
-//             ) : (
-//                 <ProtectedRoute>
-//                     <Component {...pageProps} />
-//                 </ProtectedRoute>
-//             )}
-//         </>
-//     );
-// }
-
-// export default MyApp;
-
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import StaffRoute from '../src/app/components/routeProtection/StaffRoute';
 import UserRoute from '../src/app/components/routeProtection/UserRoute';
 import AdminRoute from '../src/app/components/routeProtection/AdminRoute';
 import '../src/app/components/routeProtection/popup.css';
 
-// routes that don't require authentication
-const noAuthRequired = ['/', '/login', '/user-home', '/admin-home', '/admin-create-event' ]; 
-// routes that require user authentication
-const userRoutes = [];
-// routes that require admin authentication
-const adminRoutes = [];
-// routes that require staff authentication
-const staffRoutes = [];
+// Routes that don't require authentication
+const noAuthRequired = ['/', '/login']; 
+// Routes that require user authentication
+const userRoutes = ['/user-home', '/user-view-event'];
+// Routes that require admin authentication
+const adminRoutes = ['/admin-home', '/admin-view-event', '/admin-create-event', '/admin-create-map'];
+// Routes that require staff authentication
+const staffRoutes = ['/staff-home', '/staff-view-event']; 
 
 function MyApp({ Component, pageProps }) {
     const router = useRouter();
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        // Wait for router to be ready before rendering protected routes
+        if (router.isReady) {
+            setLoading(false);
+        }
+    }, [router.isReady]);
 
     const getProtectedRoute = () => {
         if (noAuthRequired.includes(router.pathname)) {
@@ -75,6 +51,11 @@ function MyApp({ Component, pageProps }) {
         }
     };
 
+    if (loading) {
+        return null; // Optionally, return a loading spinner or similar
+    }
+
     return <>{getProtectedRoute()}</>;
 }
+
 export default MyApp;

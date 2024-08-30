@@ -47,8 +47,12 @@ export default function Login() {
         console.log(role);
 
         // Redirect based on user role
-        if (role) {
-          router.push('/');
+        if (role == 'User') {
+          router.push('/user-home');
+        } else if (role == 'Admin') { 
+          router.push('/admin-home');
+        } else if (role == 'Staff') {
+          router.push('/staff-home');
         } else {
           setError('Login failed: User role not found');
           setShowModal(true);
@@ -76,13 +80,11 @@ export default function Login() {
         if (!roleSnapshot.empty) {
           console.log(`User is a ${role}`);
           const roleDoc = roleSnapshot.docs[0];
-          console.log(`Hello ${roleDoc.id}`);
 
           // Store the uid and role in local storage
           localStorage.setItem('userDocID', roleDoc.id);
-          localStorage.setItem('userRole', role.toLowerCase());
-
-          return role.toLowerCase();
+          localStorage.setItem('userRole', role);
+          return role;
         }
       }
 
