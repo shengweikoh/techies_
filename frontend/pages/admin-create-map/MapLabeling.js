@@ -64,7 +64,7 @@ const MapLabeling = () => {
   const exportMarkersToDatabase = async () => {
     console.log(markers);
     try {
-      const response = await axios.post('https://your-backend-api-url/markers', {
+      const response = await axios.post('http://localhost:8001/markers', {
         markers,
       });
       console.log('Markers successfully sent to the server:', response.data);

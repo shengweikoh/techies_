@@ -34,10 +34,10 @@ app.get("/", (req, res) => {
 	res.status(200).json("Welcome, your app is working well");
 });
 
-app.use("/controllers/ControllerEventDetail", require("./routers/EventDetailsRouter.js"));
-app.use("/controllers/ControllerAdminProfile", require("./routers/AdminProfileRouter.js"));
-app.use("/controllers/ControllerStaffProfile", require("./routers/StaffProfileRouter.js"));
-app.use("/controllers/ControllerUserProfile", require("./routers/UserProfileRouter.js"));
+// app.use("/controllers/ControllerEventDetail", require("./routers/EventDetailsRouter.js"));
+// app.use("/controllers/ControllerAdminProfile", require("./routers/AdminProfileRouter.js"));
+// app.use("/controllers/ControllerStaffProfile", require("./routers/StaffProfileRouter.js"));
+// app.use("/controllers/ControllerUserProfile", require("./routers/UserProfileRouter.js"));
 
 // // for user to view events
 // app.use("/user/event", require("./routers/userEventRouter.js"));
@@ -53,6 +53,8 @@ app.use("/controllers/ControllerUserProfile", require("./routers/UserProfileRout
 
 // // for all to view event detail
 // app.use("/event/detail", require("./routers/eventDetailsRouter.js"));
+
+app.use("/marker", require("./routers/markerUpdateRoute.js"));
 
 module.exports = app;
 
