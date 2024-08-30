@@ -1,16 +1,22 @@
 "use client";
 
 import React, { useState } from 'react';
-import styles from './page.module.css';
+import { signIn } from 'next-auth/react';
+import styles from './page.module.css'; // Updated to use the correct module import
+import FBInstanceAuth from "../../src/app/firebase/firebase_auth";
 import { useRouter } from 'next/router';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../src/app/firebase/firebase_config';
-import { signInWithGoogle } from '../../src/app/firebase/firebase_auth'; // Ensure you have this function in your auth utils
+import { FirestoreDB } from '../../src/app/firebase/firebase_config';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { signInWithEmailAndPassword, getIdToken } from 'firebase/auth';
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  
+  const auth = FBInstanceAuth.getAuth();
   const router = useRouter();
 
   const handleEmailChange = (event) => {
@@ -21,26 +27,72 @@ export default function Login() {
     setPassword(event.target.value);
   };
 
-  const handleLogin = async (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    setError(null);
+
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      console.log('Login successful');
-      router.push('/'); // Redirect to the homepage after login
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      if (user) {
+        console.log('Login successful');
+        const token = await getIdToken(user);
+        console.log('User token:', token);
+
+        // Store the token in local storage or cookies
+        localStorage.setItem('userToken', token);
+
+        const role = await getUserRole(user.email);
+        console.log(role);
+
+        // Redirect based on user role
+        if (role == 'User') {
+          router.push('/user-home');
+        } else if (role == 'Admin') { 
+          router.push('/admin-home');
+        } else if (role == 'Staff') {
+          router.push('/staff-home');
+        } else {
+          setError('Login failed: User role not found');
+          setShowModal(true);
+        }
+      } else {
+        setError('Login failed: User not found');
+        setShowModal(true);
+      }
     } catch (error) {
-      setError(`Login failed: ${error.message}`);
-      console.error(error);
+      setError(`Unexpected error: ${error.message}`);
+      setShowModal(true);
     }
   };
 
-  const handleGoogleLogin = async () => {
+  const getUserRole = async (email) => {
+    console.log('Checking user role');
+
     try {
-      await signInWithGoogle();
-      console.log('Google sign-in successful');
-      router.push('/'); // Redirect after successful Google login
+      const roles = ['User', 'Admin', 'Staff'];
+
+      for (const role of roles) {
+        const roleQuery = query(collection(FirestoreDB, role), where('Email', '==', email));
+        const roleSnapshot = await getDocs(roleQuery);
+
+        if (!roleSnapshot.empty) {
+          console.log(`User is a ${role}`);
+          const roleDoc = roleSnapshot.docs[0];
+
+          // Store the uid and role in local storage
+          localStorage.setItem('userDocID', roleDoc.id);
+          localStorage.setItem('userRole', role);
+          return role;
+        }
+      }
+
+      console.log('User not found in any role');
+      return null;
     } catch (error) {
-      setError(`Google login failed: ${error.message}`);
-      console.error(error);
+      console.error('Error checking user role:', error);
+      return null;
     }
   };
 
@@ -52,6 +104,12 @@ export default function Login() {
     await signIn('google');
   };
 
+  const handleSignUp = async (event) => {
+    event.preventDefault();
+    console.log("Sign Up");
+    await sign_up('signup');
+  }
+
   const closeModal = () => {
     setShowModal(false);
     setError(null);
@@ -59,30 +117,37 @@ export default function Login() {
 
   return (
     <div className={styles.container}>
-      <form onSubmit={handleLogin} className={styles.form}>
-        <h2>Login to 'app name'</h2>
-        {error && <p className={styles.error}>{error}</p>}
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <h2>Welcome to 'app name'</h2>
         <div className={styles.inputGroup}>
-          <label htmlFor="email" className={styles.label}>Email:</label>
+          <label htmlFor="email">Email:</label>
           <input
             type="email"
             id="email"
             value={email}
             onChange={handleEmailChange}
             required
-            className={styles.input}
           />
         </div>
         <div className={styles.inputGroup}>
-          <label htmlFor="password" className={styles.label}>Password:</label>
+          <label htmlFor="password">Password:</label>
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             id="password"
             value={password}
             onChange={handlePasswordChange}
             required
-            className={styles.input}
           />
+        </div>
+        <div className={styles.checkboxContainer}>
+          <label>
+            <input
+              type="checkbox"
+              checked={showPassword}
+              onChange={() => setShowPassword(!showPassword)}
+            />
+            Show Password
+          </label>
         </div>
         <button type="submit" className={styles.button}>
           Login
@@ -92,7 +157,74 @@ export default function Login() {
         <button className={styles.googleButton} onClick={handleGoogleLogin}>
           Sign in with Google
         </button>
+        <div></div>
+        <button className={styles.toggleButton} onClick={handleSignUp} style={{ marginTop: '20px' }}>
+          Sign Up
+        </button>
       </form>
+      {showModal && (
+        <div className={styles.modal}>
+          <p>{error}</p>
+          <button onClick={closeModal}>Close</button>
+        </div>
+      )}
     </div>
   );
 }
+
+
+// // sign in with google 
+
+// import { useState } from 'react';
+// import { signIn } from 'next-auth/react';
+// import styles from './page.module.css';
+
+// export default function Login() {
+// const [email, setEmail] = useState('');
+// const [password, setPassword] = useState('');
+
+// const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     // Add your login logic here
+//     console.log('Email:', email);
+//     console.log('Password:', password);
+// };
+
+// return (
+//     <div className={styles.container}>
+//     <form onSubmit={handleSubmit} className={styles.form}>
+//         <h2>Login</h2>
+//         <div className={styles.inputGroup}>
+//         <label htmlFor="email" className={styles.label}>Email:</label>
+//         <input
+//             type="email"
+//             id="email"
+//             value={email}
+//             onChange={(e) => setEmail(e.target.value)}
+//             required
+//         />
+//         </div>
+//         <div className={styles.inputGroup}>
+//         <label htmlFor="password" className={styles.label}>Password:</label>
+//         <input
+//             type="password"
+//             id="password"
+//             value={password}
+//             onChange={(e) => setPassword(e.target.value)}
+//             required
+//         />
+//         </div>
+//         <button type="submit" className={styles.button}>
+//         Login
+//         </button>
+//     </form>
+//     <div className={styles.or}>or</div>
+//     <button className={styles.googleButton} onClick={() => signIn('google')}>
+//         Sign in with Google
+//     </button>
+//     </div>
+// );
+// }
+
+
+
