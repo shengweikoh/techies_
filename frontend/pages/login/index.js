@@ -104,6 +104,12 @@ export default function Login() {
     await signIn('google');
   };
 
+  const handleSignUp = async (event) => {
+    event.preventDefault();
+    console.log("Sign Up");
+    await sign_up('signup');
+  }
+
   const closeModal = () => {
     setShowModal(false);
     setError(null);
@@ -150,6 +156,10 @@ export default function Login() {
         <div className={styles.or}>or</div>
         <button className={styles.googleButton} onClick={handleGoogleLogin}>
           Sign in with Google
+        </button>
+        <div></div>
+        <button className={styles.toggleButton} onClick={handleSignUp} style={{ marginTop: '20px' }}>
+          Sign Up
         </button>
       </form>
       {showModal && (
