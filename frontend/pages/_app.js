@@ -4,8 +4,6 @@ import StaffRoute from '../src/app/components/routeProtection/StaffRoute';
 import UserRoute from '../src/app/components/routeProtection/UserRoute';
 import AdminRoute from '../src/app/components/routeProtection/AdminRoute';
 import '../src/app/components/routeProtection/popup.css';
-import MapComponent from './map';
-import { ChakraProvider } from '@chakra-ui/react';
 
 
 // Routes that don't require authentication
@@ -60,10 +58,7 @@ function MyApp({ Component, pageProps }) {
 
     return (
         <>
-        <ChakraProvider>
             {getProtectedRoute()}
-            <MapComponent />
-        </ChakraProvider>
         </>
     );
 }
