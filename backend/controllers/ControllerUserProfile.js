@@ -35,17 +35,13 @@ const updateUserProfile = async (req, res) => {
 					"User updated emergency contact number/email/name/phone required",
 			});
 	}
-
     try {
-        // Update user document in Firestore
-        const userRef = db.collection("User").doc(userID);
-        await userRef.update({
-            EContact,
-            Email,
-            Name,
-            Phone,
-        });
-
+        await db.collection("User").doc(userID).update({
+            EContact: EContact,
+            Email: Email,
+            Name: Name,
+            Phone: Phone,
+        })
         return res.status(200).json({
             code: 200,
             message: "User profile successfully updated.",

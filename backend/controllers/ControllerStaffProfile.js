@@ -27,9 +27,9 @@ const getStaffProfile = async (req, res) => {
 }
 const updateStaffProfile = async (req, res) => {
     const staffID = req.query.id;
-    const { EContact, Email, Name, Phone } = req.body;
+    const { Email, Name, Phone } = req.body;
 
-    if (!EContact || !Email || !Name || !Phone) {
+    if (!Email || !Name || !Phone) {
 		return res
 			.status(400)
 			.json({
@@ -40,13 +40,10 @@ const updateStaffProfile = async (req, res) => {
 	}
 
     try {
-        // Update user document in Firestore
-        const userRef = db.collection("User").doc(staffID);
-        await userRef.update({
-            EContact,
-            Email,
-            Name,
-            Phone,
+        await db.collection("students").doc(studentID).update({
+            firstName: firstname,
+            lastName: lastname,
+            birthdate: birthdate,
         });
 
         return res.status(200).json({
