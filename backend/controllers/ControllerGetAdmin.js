@@ -1,7 +1,7 @@
 // hvnt test
 const {db} = require("../firebase/firebase.js");
 
-const getAdmin = async (req, res) => {
+const getAdminProfile = async (req, res) => {
     const adminID = req.query.id;
     try {
         const admin = await db.collection("Admin").doc(adminID).get();
@@ -26,7 +26,7 @@ const getAdmin = async (req, res) => {
     }
 }
 module.exports = {
-    getAdmin
+    getAdminProfile
 }
 
 

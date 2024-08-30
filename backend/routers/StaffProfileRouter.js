@@ -1,8 +1,8 @@
 const express = require("express");
-const {getStaff} = require("../controllers/ControllerGetStaff.js");
+const {getStaffProfile} = require("../controllers/ControllerGetStaff.js");
 
 const router = express.Router();
 
-router.get('/', getStaff);
+router.get('/', getStaffProfile);
 
 module.exports = router;

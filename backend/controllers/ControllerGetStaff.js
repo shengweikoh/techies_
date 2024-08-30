@@ -1,7 +1,7 @@
 // hvnt test
 const {db} = require("../firebase/firebase.js");
 
-const getStaff = async (req, res) => {
+const getStaffProfile = async (req, res) => {
     const staffID = req.query.id;
     try {
         const staff = await db.collection("Staff").doc(staffID).get();
@@ -26,7 +26,7 @@ const getStaff = async (req, res) => {
     }
 }
 module.exports = {
-    getStaff
+    getStaffProfile
 }
 
 
