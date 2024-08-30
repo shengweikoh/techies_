@@ -5,8 +5,9 @@ import UserRoute from '../src/app/components/routeProtection/UserRoute';
 import AdminRoute from '../src/app/components/routeProtection/AdminRoute';
 import '../src/app/components/routeProtection/popup.css';
 
+
 // Routes that don't require authentication
-const noAuthRequired = ['/', '/login', '/signup']; 
+const noAuthRequired = ['/', '/login', '/signup', '/map']; 
 // Routes that require user authentication
 const userRoutes = ['/user-home', '/user-view-event'];
 // Routes that require admin authentication
@@ -55,7 +56,11 @@ function MyApp({ Component, pageProps }) {
         return null; // Optionally, return a loading spinner or similar
     }
 
-    return <>{getProtectedRoute()}</>;
+    return (
+        <>
+            {getProtectedRoute()}
+        </>
+    );
 }
 
 export default MyApp;
