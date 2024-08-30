@@ -1,7 +1,7 @@
 // hvnt test
 const {db} = require("../firebase/firebase.js");
 
-const getStaff = async (req, res) => {
+const getStaffProfile = async (req, res) => {
     const staffID = req.query.id;
     try {
         const staff = await db.collection("Staff").doc(staffID).get();
@@ -25,8 +25,42 @@ const getStaff = async (req, res) => {
         return res.status(500).json({code: 500, message: `Error getting staff: ${error} `})
     }
 }
+const updateStaffProfile = async (req, res) => {
+    const staffID = req.query.id;
+    const { Email, Name, Phone } = req.body;
+
+    if (!Email || !Name || !Phone) {
+		return res
+			.status(400)
+			.json({
+				code: 400,
+				message:
+					"User updated emergency contact number/email/name/phone required",
+			});
+	}
+
+    try {
+        await db.collection("students").doc(studentID).update({
+            firstName: firstname,
+            lastName: lastname,
+            birthdate: birthdate,
+        });
+
+        return res.status(200).json({
+            code: 200,
+            message: "User profile successfully updated.",
+        });
+    } catch (error) {
+        console.error("Error updating user profile:", error);
+        return res.status(500).json({
+            code: 500,
+            message: `Error updating user profile: ${error.message}`,
+        });
+    }
+}
 module.exports = {
-    getStaff
+    getStaffProfile,
+    updateStaffProfile
 }
 
 

@@ -1,7 +1,7 @@
 // hvnt test
 const {db} = require("../firebase/firebase.js");
 
-const getEvent = async (req, res) => {
+const getEventDetails = async (req, res) => {
     const eventID = req.query.id;
     try {
         const event = await db.collection("Events").doc(eventID).get();
@@ -37,7 +37,7 @@ const getEvent = async (req, res) => {
     }
 }
 module.exports = {
-    getEvent
+    getEventDetails
 }
 
 

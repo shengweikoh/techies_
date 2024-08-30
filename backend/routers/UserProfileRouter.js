@@ -1,8 +1,12 @@
 const express = require("express");
-const {getEvent} = require("../controllers/ControllerGetEvent.js");
+const {getUserProfile,updateUserProfile,getUserEvent} = require("../controllers/ControllerUserProfile.js");
 
 const router = express.Router();
 
-router.get('/', getEvent);
+router.get('/', getUserProfile);
+
+route.get('/update', updateUserProfile);
+
+route.get('/userEvent', getUserEvent);
 
 module.exports = router;
