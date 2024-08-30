@@ -1,127 +1,111 @@
 "use client";
 
 import React, { useState } from 'react';
+import { signIn } from 'next-auth/react';
 import styles from './page.module.css'; // Updated to use the correct module import
 import FBInstanceAuth from "../../src/app/firebase/firebase_auth";
 import { useRouter } from 'next/router';
-import {FirestoreDB, auth} from '../../src/app/firebase/firebase_config';
-import { collection, query, where, getDocs, Firestore} from 'firebase/firestore';
+import { FirestoreDB } from '../../src/app/firebase/firebase_config';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 import { signInWithEmailAndPassword, getIdToken } from 'firebase/auth';
-// import '../../src/app/components/card/card.css';
 
 export default function Login() {
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
-	const [showPassword, setShowPassword] = useState(false);
-	const auth = FBInstanceAuth.getAuth();
-	const router = useRouter();
-	const [error, setError] = useState(null);
-	const [showModal, setShowModal] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  
+  const auth = FBInstanceAuth.getAuth();
+  const router = useRouter();
 
-	const handleUsernameChange = (event) => {
+  const handleEmailChange = (event) => {
     setEmail(event.target.value);
-	};
+  };
 
-	const handlePasswordChange = (event) => {
-	setPassword(event.target.value);
-	};
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+  };
 
-	const handleSubmit = async (event) => {
-		event.preventDefault();
-		setError(null);
-	
-		try {
-			const userCredential = await signInWithEmailAndPassword(auth, email, password);
-			const user = userCredential.user;
-			if (user) {
-				console.log('Login successful');
-				const token = await getIdToken(user);
-				console.log('User token:', token);
-	
-				// Store the token in local storage or cookies
-				localStorage.setItem('userToken', token);
-	
-				const role = await checkUserRole(user.email);
-				console.log(role);
-				if (role === 'User') {
-					router.push('/');
-				} else if (role === 'Admin') {
-					router.push('/');
-				} else if ( role === 'Staff') {
-          router.push('/');
-        }
-			} else {
-				setError(`Login failed: ${errorCode}`);
-				setShowModal(true);
-			}
-		} catch (error) {
-			setError(`Unexpected error: ${error.message}`);
-			setShowModal(true);
-		}
-	};
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setError(null);
 
-	const closeModal = () => {
-		setShowModal(false);
-		setError(null);
-	};
-	
-	const checkUserRole = async (email) => {
-		console.log('Checking user role');
-		console.log('db:', FirestoreDB);
     try {
-      // Check if email exists in the User collection
-      const userQuery = query(collection(FirestoreDB, 'User'), where('Email', '==', email));
-      const userSnapshot = await getDocs(userQuery);
-      if (!userSnapshot.empty) {
-        console.log('User is a Normal User');
-        const userDoc = userSnapshot.docs[0];
-        console.log("Hello " + userDoc.id);
-        // Store the uid in local storage or cookies
-        localStorage.setItem('userDocID', userDoc.id);
-        localStorage.setItem('userRole', 'user');
-        return 'user';
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      if (user) {
+        console.log('Login successful');
+        const token = await getIdToken(user);
+        console.log('User token:', token);
+
+        // Store the token in local storage or cookies
+        localStorage.setItem('userToken', token);
+
+        const role = await getUserRole(user.email);
+        console.log(role);
+
+        // Redirect based on user role
+        if (role) {
+          router.push('/');
+        } else {
+          setError('Login failed: User role not found');
+          setShowModal(true);
+        }
+      } else {
+        setError('Login failed: User not found');
+        setShowModal(true);
       }
-    
-      // Check if email exists in the Admin collection
-      const adminQuery = query(collection(FirestoreDB, 'Admin'), where('Email', '==', email));
-      const adminSnapshot = await getDocs(adminQuery);
-      if (!adminSnapshot.empty) {
-        console.log('User is an Admin');
-        const adminDoc = adminSnapshot.docs[0];
-        console.log("Hello " + adminDoc.id);
-        // Store the uid in local storage or cookies
-        localStorage.setItem('userDocID', adminDoc.id);
-        localStorage.setItem('userRole', 'admin');
-        return 'admin';
-      }
-    
-      // Check if email exists in the Staff collection
-      const staffQuery = query(collection(FirestoreDB, 'Staff'), where('Email', '==', email));
-      const staffSnapshot = await getDocs(staffQuery);
-      if (!staffSnapshot.empty) {
-        console.log('User is a Staff member');
-        const staffDoc = staffSnapshot.docs[0];
-        console.log("Hello " + staffDoc.id);
-        // Store the uid in local storage or cookies
-        localStorage.setItem('userDocID', staffDoc.id);
-        localStorage.setItem('userRole', 'staff');
-        return 'staff';
+    } catch (error) {
+      setError(`Unexpected error: ${error.message}`);
+      setShowModal(true);
+    }
+  };
+
+  const getUserRole = async (email) => {
+    console.log('Checking user role');
+
+    try {
+      const roles = ['User', 'Admin', 'Staff'];
+
+      for (const role of roles) {
+        const roleQuery = query(collection(FirestoreDB, role), where('Email', '==', email));
+        const roleSnapshot = await getDocs(roleQuery);
+
+        if (!roleSnapshot.empty) {
+          console.log(`User is a ${role}`);
+          const roleDoc = roleSnapshot.docs[0];
+          console.log(`Hello ${roleDoc.id}`);
+
+          // Store the uid and role in local storage
+          localStorage.setItem('userDocID', roleDoc.id);
+          localStorage.setItem('userRole', role.toLowerCase());
+
+          return role.toLowerCase();
+        }
       }
 
-			console.log('User not found in any role');
-			return null;
+      console.log('User not found in any role');
+      return null;
+    } catch (error) {
+      console.error('Error checking user role:', error);
+      return null;
+    }
+  };
 
-		} catch (error) {
-			console.error('Error checking user role: ', error);
-			return null;
-		}
-	};
+  // Updated Google login function
+  const handleGoogleLogin = async (event) => {
+    event.preventDefault();
+    console.log("Google login");
+    // Use next-auth's signIn function for Google login
+    await signIn('google');
+  };
 
-	const handleGoogleLogin = (event) => {
-	event.preventDefault();
-	console.log("google login");
-	FBInstanceAuth.googleLogin(auth);
-	};
+  const closeModal = () => {
+    setShowModal(false);
+    setError(null);
+  };
 
   return (
     <div className={styles.container}>
@@ -133,37 +117,49 @@ export default function Login() {
             type="email"
             id="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={handleEmailChange}
             required
           />
         </div>
         <div className={styles.inputGroup}>
           <label htmlFor="password">Password:</label>
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             id="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handlePasswordChange}
             required
           />
         </div>
-        <div className="checkbox-container">
-            <label>
-              <input
-                type="checkbox"
-                checked={showPassword}
-                onChange={() => setShowPassword(!showPassword)}
-              />
-              Show Password
-            </label>
-          </div>
+        <div className={styles.checkboxContainer}>
+          <label>
+            <input
+              type="checkbox"
+              checked={showPassword}
+              onChange={() => setShowPassword(!showPassword)}
+            />
+            Show Password
+          </label>
+        </div>
         <button type="submit" className={styles.button}>
-        Login 
+          Login
+        </button>
+        {/* Moved Google login button here */}
+        <div className={styles.or}>or</div>
+        <button className={styles.googleButton} onClick={handleGoogleLogin}>
+          Sign in with Google
         </button>
       </form>
+      {showModal && (
+        <div className={styles.modal}>
+          <p>{error}</p>
+          <button onClick={closeModal}>Close</button>
+        </div>
+      )}
     </div>
   );
 }
+
 
 // // sign in with google 
 
@@ -217,4 +213,6 @@ export default function Login() {
 //     </div>
 // );
 // }
+
+
 
