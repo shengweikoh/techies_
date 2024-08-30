@@ -12,6 +12,12 @@ router.post('/update', updateAdminProfile);
 // http://localhost:8001/admin/adminEvent?adminID=
 router.get('/adminEvent', getAdminEvent);
 
+// http://localhost:8001/admin/createAdmin
+// {
+//     "Email": "admin@example.com",
+//     "Name": "John Doe",
+//     "Phone": "+1234567890"
+//   }
 router.post('/createAdmin', createAdminProfile)
 
 module.exports = router;
