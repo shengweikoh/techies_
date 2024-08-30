@@ -17,7 +17,7 @@ import { FirestoreDB } from "./firebase_config";
 
 class FirebaseFirestore {
 	// google login add user to firestore
-	googleLogin = async function (userID, userDisplayName, userEmail) {
+	googleLogin = async function (userID, userName, userEmail) {
 		const docRef = doc(FirestoreDB, "users", userID);
 		const docSnap = await getDoc(docRef);
 		if (docSnap.exists()) {
@@ -29,9 +29,9 @@ class FirebaseFirestore {
 	};
 
 	// register user to firestore
-	register = async function (userID, userDisplayName, userEmail) {
+	register = async function (userID, userName, userEmail) {
 		await setDoc(doc(FirestoreDB, "users", userID), {
-			name: userDisplayName,
+			name: userName,
 			email: userEmail,
 		});
 		console.log("created user in firestore");
