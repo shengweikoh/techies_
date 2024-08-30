@@ -16,10 +16,12 @@
     "@mui/styled-engine-sc": "^6.0.0",
     "axios": "^1.7.5",
     "firebase": "^10.13.0",
+    "leaflet": "^1.9.4",
     "next": "14.2.7",
     "next-auth": "^4.24.7",
     "react": "^18",
     "react-dom": "^18",
+    "react-leaflet": "^4.2.1",
     "styled-components": "^6.1.12"
   }
 }

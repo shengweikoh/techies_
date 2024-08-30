@@ -106,3 +106,36 @@ background-color: #333;
     height: auto;
     margin: auto;
 }
+
+.image-container {
+    padding: 20px;
+}
+
+.color-circle-icon .color-circle {
+  background-color: #1E90FF; /* Default color */
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #fff; /* Optional: add a white border for better visibility */
+}
+
+.color-selector {
+  margin-bottom: 10px;
+}
+
+.color-selector button {
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+
+.color-preview {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #000; /* Optional: add a border for better visibility */
+    margin-bottom: 10px;
+  }
