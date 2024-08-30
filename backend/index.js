@@ -34,19 +34,19 @@ app.get("/", (req, res) => {
 	res.status(200).json("Welcome, your app is working well");
 });
 
-// for user to view events
-app.use("/user/event", require("./routers/userEventRouter.js"));
+// // for user to view events
+// app.use("/user/event", require("./routers/userEventRouter.js"));
 
-// for user to view profile
-app.use("/user/profile", require("./routers/userProfileRouter.js"));
+// // for user to view profile
+// app.use("/user/profile", require("./routers/userProfileRouter.js"));
 
-// for staff to view profile
-app.use("/staff/profile", require("./routers/staffProfileRouter.js"));	
+// // for staff to view profile
+// app.use("/staff/profile", require("./routers/staffProfileRouter.js"));	
 
-// for admin to view profile
-app.use("/admin/profile", require("./routers/adminProfileRouter.js"));
+// // for admin to view profile
+// app.use("/admin/profile", require("./routers/adminProfileRouter.js"));
 
-// for all to view event detail
-app.use("/event/detail", require("./routers/eventDetailsRouter.js"));
+// // for all to view event detail
+// app.use("/event/detail", require("./routers/eventDetailsRouter.js"));
 
 module.exports = app;
