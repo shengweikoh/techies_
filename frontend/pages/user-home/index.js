@@ -3,6 +3,7 @@ import React from 'react';
 import './page.css';
 import Link from "next/link";
 import EventIcon from '@mui/icons-material/Event';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import CreateIcon from '@mui/icons-material/Create';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -17,7 +18,87 @@ export default function Page() {
 
     const Dashboard = () => {
       const [eventsData, setEventsData] = useState(null);
+      const [savedEventsData, setSavedEventsData] = useState(null);
+      const [eventsArray, setEventsArray] = useState([]);
       const [error, setError] = useState(null);
+
+      useEffect(() => {
+        fetchEventsData();
+        fetchSavedEventsData();
+      }, []);
+    
+      const fetchSavedEventsData = async () => {
+        try {
+          const userDocID = localStorage.getItem('userDocID');
+          if (!userDocID) {
+              throw new Error('User document ID not found in localStorage');
+          }
+            const response = await axios.get(`http://localhost:8001/user/userSaved?userID=${userDocID}`);
+            console.log('API Response:', response.data);
+            setSavedEventsData(response.data);
+        } catch (error) {
+            setError(error.message);
+        }
+      };
+
+      const fetchEventsArray = async () => {
+        try {
+            if (!savedEventsData || !savedEventsData.validUserEvent) return;
+    
+            const savedEventsDataPromises = savedEventsData.validUserEvent.map(async (eventID) => {
+                try {
+                    const response = await axios.get(`http://localhost:8001/event/detail?eventID=${eventID}`);
+                    return response.data;
+                } catch (err) {
+                    console.error(`Error fetching eventID ${eventID}:`, err);
+                    return null;
+                }
+            });
+    
+            const resolvedEventsArray = await Promise.all(savedEventsDataPromises);
+            setEventsArray(resolvedEventsArray.filter(Boolean)); 
+        } catch (error) {
+            setError(error.message);
+            console.error("Error in fetchEventsArray:", error);
+        }
+    };
+
+    useEffect(() => {
+      if (savedEventsData) {
+          fetchEventsArray();
+      }
+  }, [savedEventsData]);
+
+      const renderSavedEvents = () => {
+        if (!eventsArray || eventsArray.length == 0) {
+          return <p>No Events Available</p>
+        };
+        const cards = [];
+        for (let i = 0; i < eventsArray.length; i++) {
+          if (i >= 3) {
+            break;
+          }
+
+          cards.push(
+            <EventCard
+              key={i}
+              event={eventsArray[i]}
+            />
+          );
+        }
+
+        return (
+          <div className="dashboard-cards">
+            {error ? (
+              <p>{error}</p>
+            ) : eventsArray.length > 0 ? (
+              cards
+            ) : (
+              <p>No Available Events</p>
+            )}
+          </div>
+        );
+      }
 
       const fetchEventsData = async () => {
         try {
@@ -29,9 +110,6 @@ export default function Page() {
         }
       };
 
-        useEffect(() => {
-          fetchEventsData();
-        }, []);
 
       const renderEvents = () => {
         if (!eventsData) {
@@ -66,6 +144,13 @@ export default function Page() {
         return (
           <div className="dashboard">
             <div className="dashboard-container">
+              <Box display="flex" alignItems="center" gap="15px">
+                <BookmarkBorderIcon fontSize="large"/>
+                <h2>Saved Events</h2>
+              </Box>
+              <div className="dashboard-cards">
+                {renderSavedEvents()}
+              </div>
               <Box display="flex" alignItems="center" gap="15px">
                 <EventIcon fontSize="large"/>
                 <h2>Ongoing Events</h2>
