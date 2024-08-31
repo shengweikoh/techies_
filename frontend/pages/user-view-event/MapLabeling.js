@@ -51,12 +51,6 @@ const MapLabeling = ({ eventDocID, imgURL }) => {
     };
   }, [imgURL]);
 
-  const handleChange = (index, field, value) => {
-    const updatedMarkers = [...markers];
-    updatedMarkers[index] = { ...updatedMarkers[index], [field]: value };
-    setMarkers(updatedMarkers);
-  };
-
   return (
     <div>
       <MapContainer center={[51.50, -0.07]} zoom={13} style={{ height: "600px", width: "100%" }}>
@@ -83,7 +77,7 @@ const MapLabeling = ({ eventDocID, imgURL }) => {
             return null; // Skip rendering if the position is invalid
           }
         })}
-      </MapContainer>
+      </MapContainer> 
       
       {/* List marker names and wait times */}
       <div style={{ marginTop: '20px' }}>
@@ -91,52 +85,18 @@ const MapLabeling = ({ eventDocID, imgURL }) => {
         <ul style={{ listStyleType: 'none', padding: 0 }}>
           {markers.map((marker, index) => (
             <li key={index} style={{ marginBottom: '10px' }}>
-              <label>
-                <strong>Name:</strong>
-                <input
-                  type="text"
-                  value={marker.label || ''}
-                  onChange={(e) => handleChange(index, 'label', e.target.value)}
-                  style={{
-                    fontSize: '16px',
-                    marginLeft: '10px',
-                    padding: '5px',
-                    border: '1px solid #ccc',
-                    borderRadius: '4px',
-                    width: '200px'
-                  }}
-                  placeholder="Marker Name"
-                />
-              </label>
-              <br />
-              <label>
-                <strong>Wait Time:</strong>
-                <input
-                  type="text"
-                  value={marker.waitTime || ''}
-                  onChange={(e) => handleChange(index, 'waitTime', e.target.value)}
-                  style={{
-                    fontSize: '16px',
-                    marginLeft: '10px',
-                    padding: '5px',
-                    border: '1px solid #ccc',
-                    borderRadius: '4px',
-                    width: '200px'
-                  }}
-                  placeholder="Wait Time (minutes)"
-                />
-              </label>
+              <div>
+                <strong>Name:</strong> {marker.label}
+              </div>
+              <div>
+                <strong>Wait Time:</strong> {marker.waitTime} minutes
+              </div>
             </li>
           ))}
         </ul>
       </div>
       
       <br />
-      <div className='buttons-container'>
-        <Link href="/admin-home" className='dashboard-button'>
-          Save
-        </Link>
-      </div>
     </div>
   );
 };
