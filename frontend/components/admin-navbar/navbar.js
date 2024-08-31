@@ -172,7 +172,15 @@ function ResponsiveAppBar() {
                   key={setting}
                   onClick={setting === 'Log Out' ? handleLogout : handleCloseUserMenu}
                 >
-                  <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
+                  <Typography
+                    sx={{
+                      my: 0.1,
+                      fontFamily: 'TT Hoves Pro Trial, sans-serif',
+                      fontWeight: 'bold'
+                    }}
+                  >
+                    {setting}
+                  </Typography>
                 </MenuItem>
               ))}
 

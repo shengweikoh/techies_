@@ -168,11 +168,19 @@ function ResponsiveAppBar() {
             >
               {settings.map((setting) => (
                 <MenuItem
-                  key={setting}
-                  onClick={setting === 'Log Out' ? handleLogout : handleCloseUserMenu}
+                key={setting}
+                onClick={setting === 'Log Out' ? handleLogout : handleCloseUserMenu}
+              >
+                <Typography
+                  sx={{
+                    my: 0.1,
+                    fontFamily: 'TT Hoves Pro Trial, sans-serif',
+                    fontWeight: 'bold'
+                  }}
                 >
-                  <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
-                </MenuItem>
+                  {setting}
+                </Typography>
+              </MenuItem>
               ))}
 
             </Menu>
