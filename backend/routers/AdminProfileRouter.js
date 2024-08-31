@@ -1,5 +1,5 @@
 const express = require("express");
-const {getAdminProfile, updateAdminProfile, getAdminEvent, createAdminProfile} = require("../controllers/ControllerAdminProfile.js");
+const {getAdminProfile, updateAdminProfile, getAdminEvent, createAdminProfile, assignEventStaff} = require("../controllers/ControllerAdminProfile.js");
 
 const router = express.Router();
 
@@ -19,5 +19,7 @@ router.get('/adminEvent', getAdminEvent);
 //     "Phone": "+1234567890"
 //   }
 router.post('/createAdmin', createAdminProfile)
+
+router.post('/assignStaff', assignEventStaff)
 
 module.exports = router;

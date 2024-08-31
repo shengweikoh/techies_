@@ -135,12 +135,42 @@ const createAdminProfile = async (req, res) => {
         });
     }
 }
+const assignEventStaff = async (req,res) => {
+    const { staffEmail, eventID } = req.body;
+
+    if (!staffID || !eventID) {
+        return res.status(400).json({
+            code: 400,
+            message: "staffID and eventID  are required to assign an event.",
+        });
+    }
+
+    try {
+        // Reference to the staff member's subcollection
+        const staffEventRef = db.collection("Staff").doc(staffID).collection("EventIC").doc(eventID);
+
+        // Set event details in the subcollection
+        await staffEventRef.set({ eventID: eventID });
+
+        return res.status(200).json({
+            code: 200,
+            message: "Event successfully assigned to staff member.",
+        });
+    } catch (error) {
+        console.error("Error assigning event to staff:", error);
+        return res.status(500).json({
+            code: 500,
+            message: `Error assigning event to staff: ${error.message}`,
+        });
+    }
+};
 
 module.exports = {
     getAdminProfile,
     updateAdminProfile,
     getAdminEvent,
-    createAdminProfile
+    createAdminProfile,
+    assignEventStaff,
 }
 
 

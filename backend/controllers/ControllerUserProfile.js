@@ -106,11 +106,81 @@ const createUserProfile = async (req, res) => {
     }
 }
 
+const saveEvent = async (req,res) => {
+    const userID = req.query.userID;
+    const { eventID } = req.body;
+
+    if (!eventID) {
+        return res.status(400).json({
+            code: 400,
+            message: "EventID is required to save the event.",
+        });
+    }
+
+    try {
+        // Reference to the user's Events subcollection
+        const userEventRef = db.collection("User").doc(userID).collection("SavedEvent").doc(eventID);
+
+        // Set the eventID in the subcollection (using the eventID as the document ID)
+        await userEventRef.set({ eventID: eventID });
+
+        return res.status(200).json({
+            code: 200,
+            message: "Event successfully saved for the user.",
+        });
+    } catch (error) {
+        console.error("Error saving event for user:", error);
+        return res.status(500).json({
+            code: 500,
+            message: `Error saving event for user: ${error.message}`,
+        });
+    }
+}
+
+const joinEvent = async (req,res) => {
+    const userID = req.query.userID;
+    const { eventID } = req.body;
+
+    if (!eventID) {
+        return res.status(400).json({
+            code: 400,
+            message: "EventID is required to save the event.",
+        });
+    }
+
+    try {
+        // Reference to the user's Events subcollection
+        const userEventRef = db.collection("User").doc(userID).collection("Events").doc(eventID);
+
+        // Set the eventID in the subcollection (using the eventID as the document ID)
+        await userEventRef.set({ eventID: eventID });
+        
+        const eventRef = db.collection("Events").doc(eventID).collection("Attendees").doc(userID);
+
+        await eventRef.set({ userID: userID });
+
+        return res.status(200).json({
+            code: 200,
+            message: "Event successfully joined for the user.",
+        });
+
+    } catch (error) {
+        console.error("Error joining event for user:", error);
+        return res.status(500).json({
+            code: 500,
+            message: `Error joining event for user: ${error.message}`,
+        });
+    }
+}
+
+
 module.exports = {
     getUserProfile,
     updateUserProfile,
     getUserEvent,
-    createUserProfile
+    createUserProfile,
+    saveEvent,
+    joinEvent,
 }
 
 
