@@ -65,11 +65,11 @@ const updateMarkerTime = async (req, res) => {
 
       // Iterate over markers and update the waitTime
       markers.forEach((marker) => {
-          const markerDocRef = mapDocRef.collection('Marker').doc(marker.id); // Assuming markers have an id
-          batch.update(markerDocRef, {
-              waitTime: marker.waitTime // Update the wait time
-          });
-      });
+        const markerDocRef = mapDocRef.collection('Marker').doc(marker.id); // Assuming markers have an id
+        batch.set(markerDocRef, {
+            waitTime: marker.waitTime // Update the wait time
+        }, { merge: true }); // Merge ensures fields are created or updated
+    });
 
       // Commit the batch write
       await batch.commit();
@@ -157,6 +157,7 @@ const getMarkers = async (req, res) => {
         return res.status(500).json({ code: 500, message: `Error retrieving markers: ${error.message}` });
     }
 };
+
 
 module.exports = {
     markerUpdate,
