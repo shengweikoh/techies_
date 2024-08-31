@@ -18,18 +18,19 @@ const markerUpdate = async (req, res) => {
         // Create a batch to perform multiple writes in a single request
         const batch = db.batch();
 
-        // Iterate over the markers and add them to the 'Marker' subcollection
         markers.forEach((marker) => {
-            const markerDocRef = mapDocRef.collection('Marker').doc();
-            batch.set(markerDocRef, {
-                lat: marker.position.lat,
-                lng: marker.position.lng,
-                label: marker.label,
-                code: marker.color, // Assuming 'color' is stored as 'code'
-                description: marker.description || "No description provided", // Add description field
-                waitTime: marker.waitTime || 0 // Add wait time field, default to 0 if not provided
-            });
-        });
+          const markerDocRef = mapDocRef.collection('Marker').doc();
+          batch.set(markerDocRef, {
+              position: {
+                  lat: marker.position.lat,
+                  lng: marker.position.lng
+              },
+              label: marker.label,
+              code: marker.color, // Assuming 'color' is stored as 'code'
+              description: marker.description || "No description provided", // Add description field
+              waitTime: marker.waitTime || 0 // Add wait time field, default to 0 if not provided
+          });
+      });
 
         // Commit the batch write
         await batch.commit();
