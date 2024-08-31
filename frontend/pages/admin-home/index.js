@@ -1,4 +1,4 @@
-import ResponsiveAppBar from "../../components/user-navbar/navbar";
+import ResponsiveAppBar from "../../components/admin-navbar/navbar";
 import React from 'react';
 import './page.css';
 import Link from "next/link";
@@ -11,6 +11,7 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import { Box } from "@mui/material";
 import { useState, useEffect } from 'react';
 import axios from "axios";
+import { useRouter } from 'next/router';
 
 export default function Page() {
     const Dashboard = () => {
@@ -24,6 +25,7 @@ export default function Page() {
                 if (!userDocID) {
                     throw new Error('User document ID not found in localStorage');
                 }
+                console.log(userDocID);
                 const response = await axios.get(`http://localhost:8001/admin/adminEvent?adminID=${userDocID}`);
                 console.log('API Response:', response.data);
                 setAdminEvents(response.data);
@@ -38,7 +40,7 @@ export default function Page() {
         
                 const adminEventsPromises = adminEvents.eventIDs.map(async (eventID) => {
                     try {
-                        const response = await axios.get(`http://localhost:8001/controllers/ControllerEventDetail?eventID=${eventID}`);
+                        const response = await axios.get(`http://localhost:8001/event/detail?eventID=${eventID}`);
                         return response.data;
                     } catch (err) {
                         console.error(`Error fetching eventID ${eventID}:`, err);
@@ -122,6 +124,8 @@ export default function Page() {
 const EventCard = ({ event }) => {
   const startDateTime = new Date(event.startDateTime);
   const endDateTime = new Date(event.endDateTime);
+  const router = useRouter();
+  const eventDocID = event.id;
 
   const formattedStartDate = startDateTime.toLocaleString('en-GB', {
     year: 'numeric',
@@ -145,6 +149,10 @@ const EventCard = ({ event }) => {
     minute: '2-digit'
   });
 
+  const handleClick = (eventDocID) => {
+    router.push(`/admin-view-event?eventDocID=${eventDocID}`);
+  };
+
   return (
     <div className="card">
         <h2>{event.eventName}</h2>
@@ -165,7 +173,7 @@ const EventCard = ({ event }) => {
           <p>{event.eventPrice}</p>
         </Box>
         <Box display="flex" alignItems="center">
-          <Link href="/admin-view-event" className="card-button">View Event</Link>
+          <button onClick={() => handleClick(eventDocID)} className="card-button">View Event</button>
         </Box>
     </div>
   );

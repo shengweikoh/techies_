@@ -227,6 +227,7 @@ export default function Page() {
                     </div>
                 </div>
                 <div>
+                    <br></br>
                     <button type="submit" className="dashboard-button">Continue</button>
                 </div>
                 </form>

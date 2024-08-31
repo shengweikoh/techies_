@@ -11,6 +11,7 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import { Box } from "@mui/material";
 import { useState, useEffect } from 'react';
 import axios from "axios";
+import { useRouter } from 'next/router';
 
 export default function Page() {
 
@@ -81,6 +82,8 @@ export default function Page() {
 const EventCard = ({ event }) => {
   const startDateTime = new Date(event.startDateTime);
   const endDateTime = new Date(event.endDateTime);
+  const router = useRouter();
+  const eventDocID = event.id;
 
   const formattedStartDate = startDateTime.toLocaleString('en-GB', {
     year: 'numeric',
@@ -104,6 +107,10 @@ const EventCard = ({ event }) => {
     minute: '2-digit'
   });
 
+  const handleClick = (eventDocID) => {
+    router.push(`/user-view-event?eventDocID=${eventDocID}`);
+  };
+
   return (
     <div className="card">
         <h2>{event.eventName}</h2>
@@ -124,7 +131,7 @@ const EventCard = ({ event }) => {
           <p>{event.eventPrice}</p>
         </Box>
         <Box display="flex" alignItems="center">
-          <Link href="/user-view-event" className="card-button">View Event</Link>
+          <button onClick={() => handleClick(eventDocID)} className="card-button">View Event</button>
         </Box>
     </div>
   );
