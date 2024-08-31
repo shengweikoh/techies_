@@ -26,7 +26,7 @@ const getUserProfile = async (req, res) => {
 
 const updateUserProfile = async (req, res) => {
     const userID = req.query.userID;
-    const { EContact, Name, Phone, BloodType, MedicalConditions } = req.body;
+    const { Name, Phone, BloodType, MedicalConditions, EContact } = req.body;
 
     if (!EContact || !Name || !Phone || !BloodType || !MedicalConditions) {
 		return res

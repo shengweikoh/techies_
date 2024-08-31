@@ -58,4 +58,6 @@ app.use("/markers", require("./routers/markerUpdateRoute.js"));
 // to return all events to home page
 app.use("/user/home", require("./routers/homePageRouter.js"));
 
+app.use("/map", require("./routers/mapRouter.js"));
+
 module.exports = app;
