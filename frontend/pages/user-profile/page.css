@@ -1,10 +1,13 @@
 /* page.css */
 
+@import url('https://fonts.cdnfonts.com/css/tt-hoves-pro-trial'); 
+
 body {
-    background-image: url('/assets/img3.png');
-    background-size: cover;
-    font-family: monospace;
-  }
+  background-image: url('/assets/img3.png');
+  background-size: cover;
+  font-family: 'TT Hoves Pro Trial', sans-serif;
+  color: #37452b ;
+}
   
   .dashboard {
       background-color: rgba(255, 255, 255, 0.654);
