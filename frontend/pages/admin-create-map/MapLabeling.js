@@ -3,6 +3,7 @@ import { MapContainer, ImageOverlay, Marker, Popup, useMapEvents } from 'react-l
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import axios from 'axios';
+import Link from 'next/link';
 
 const MapClickHandler = ({ setMarkers, markers, color, setSelectedMarker }) => {
   useMapEvents({
@@ -73,19 +74,6 @@ const MapLabeling = () => {
     }
   };
 
-  const createEvent = async () => {
-    try {
-      const response = await axios.post('http://localhost:8001/markers/createEvent');
-      console.log('Event successfully created:', response.data);
-
-      // Save the eventID in session storage
-      sessionStorage.setItem('eventID', response.data.eventID);
-      alert(`Event created with ID: ${response.data.eventID}`);
-    } catch (error) {
-      console.error('Error creating event:', error);
-    }
-  };
-
   return (
     <div>
       <div className="color-selector">
@@ -134,13 +122,12 @@ const MapLabeling = () => {
       </MapContainer>
 
       <br />
-      <button onClick={exportMarkersToDatabase} className='dashboard-button'>
-        Complete Event
-      </button>
-
-      <button onClick={createEvent} className='dashboard-button'>
-        Create Event
-      </button>
+      
+      <div className='buttons-container'>
+        <Link href="/admin-home" onClick={exportMarkersToDatabase} className='dashboard-button'>
+          Create Event
+        </Link>
+      </div>
     </div>
   );
 };

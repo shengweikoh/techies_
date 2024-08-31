@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import './page.css';
 import ResponsiveAppBar from '../../components/admin-navbar/navbar';
 import Link from "next/link";
+import axios from 'axios';
 
 export default function Page() {
     const Dashboard = () => {
@@ -11,6 +12,8 @@ export default function Page() {
         const [organiserContact, setOrganiserContact] = useState("");
         const [location, setLocation] = useState("");
         const [description, setDescription] = useState("");
+        const [startDate, setStartDate] = useState("");
+        const [endDate, setEndDate] = useState("");
         const [startTime, setStartTime] = useState("");
         const [endTime, setEndTime] = useState("");
         const [price, setPrice] = useState("");
@@ -22,33 +25,77 @@ export default function Page() {
         const handleOrganiserContactChange = (event) => setOrganiserContact(event.target.value);
         const handleLocationChange = (event) => setLocation(event.target.value);
         const handleDescriptionChange = (event) => setDescription(event.target.value);
+        const handleStartDateChange = (event) => setStartDate(event.target.value);
+        const handleEndDateChange = (event) => setEndDate(event.target.value);
         const handleStartTimeChange = (event) => setStartTime(event.target.value);
         const handleEndTimeChange = (event) => setEndTime(event.target.value);
         const handlePriceChange = (event) => setPrice(event.target.value);
         const handleAgeLimitChange = (event) => setAgeLimit(event.target.value);
         const handleCapacityChange = (event) => setCapacity(event.target.value);
 
-        const handleSubmit = async (e) => {
-            e.preventDefault();
-            
-            const response = await fetch('/api/create-event', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-            });
+
+  const createEvent = async (event) => {
+    event.preventDefault();
+
+    const convertDateTime = (input) => {
+        // Insert a space between the date and time
+        const dateTimeStr = input.slice(0, 10) + ' ' + input.slice(10);
         
-            if (response.ok) {
-            alert('Event created successfully!');
-            } else {
-            alert('Failed to create event.');
-            }
-        };
+        // Create a new Date object from the modified string
+        const date = new Date(dateTimeStr);
+      
+        // Check if date parsing was successful
+        if (isNaN(date)) {
+          throw new Error('Invalid date format');
+        }
+      
+        // Manually construct the desired format "YYYY-MM-DDTHH:mm:ssZ"
+        const year = date.getUTCFullYear();
+        const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are zero-based
+        const day = String(date.getUTCDate()).padStart(2, '0');
+        const hours = String(date.getUTCHours()).padStart(2, '0');
+        const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+        const seconds = String(date.getUTCSeconds()).padStart(2, '0');
+      
+        const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}Z`;
+      
+        return formattedDate;
+    };
+
+    const eventData = {
+        EventName: eventName,
+        OrganiserName: organiserName,
+        OrganiserContact: Number(organiserContact),
+        Location: location,
+        Description: description,
+        StartDT: convertDateTime(startDate + startTime),
+        EndDT: convertDateTime(endDate + endTime),
+        Price: Number(price),
+        AgeLimit: Number(ageLimit),
+        Capacity: Number(capacity)
+    }
+
+    try {
+        console.log("INPUT>", eventData);
+      const response = await axios.post(`http://localhost:8001/markers/createEvent`, eventData, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+      });
+      console.log('Event successfully created:', response.data);
+
+      // Save the eventID in session storage
+      sessionStorage.setItem('eventID', response.data.eventID);
+      alert(`Event created with ID: ${response.data.eventID}`);
+    } catch (error) {
+      console.error('Error creating event:', error);
+    }
+  };
+
         return (
           <div className="dashboard">
             <div className="dashboard-container">
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={createEvent}>
                 <div>
                     <h2>Create an Event</h2>
                 </div>
@@ -92,7 +139,7 @@ export default function Page() {
                     <div className='form-item'>
                         <h3>Organiser Contact</h3>
                         <input 
-                        type="text"
+                        type="tel"
                         required
                         className='large-input'
                         onChange={handleOrganiserContactChange}
@@ -112,7 +159,7 @@ export default function Page() {
                     <div className='form-item'>
                     <h3>Price</h3>
                     <input 
-                        type="text"
+                        type="number"
                         required
                         className='large-input'
                         onChange={handlePriceChange}
@@ -121,9 +168,29 @@ export default function Page() {
                 </div>
                 <div className='form-container'>
                     <div className='form-item'>
+                    <h3>Start Date</h3>
+                    <input 
+                        type="date"
+                        required
+                        className='large-input'
+                        onChange={handleStartDateChange}
+                    />
+                    </div>
+                    <div className='form-item'>
+                    <h3>End Date</h3>
+                    <input 
+                        type="date"
+                        required
+                        className='large-input'
+                        onChange={handleEndDateChange}
+                    />
+                    </div>
+                </div>
+                <div className='form-container'>
+                    <div className='form-item'>
                     <h3>Start Time</h3>
                     <input 
-                        type="text"
+                        type="time"
                         required
                         className='large-input'
                         onChange={handleStartTimeChange}
@@ -132,7 +199,7 @@ export default function Page() {
                     <div className='form-item'>
                     <h3>End Time</h3>
                     <input 
-                        type="text"
+                        type="time"
                         required
                         className='large-input'
                         onChange={handleEndTimeChange}
@@ -143,7 +210,7 @@ export default function Page() {
                     <div className='form-item'>
                     <h3>Age Limit</h3>
                     <input 
-                        type="text"
+                        type="number"
                         required
                         className='large-input'
                         onChange={handleAgeLimitChange}
@@ -152,7 +219,7 @@ export default function Page() {
                     <div className='form-item'>
                         <h3>Capacity</h3>
                         <input 
-                        type="text"
+                        type="number"
                         required
                         className='large-input'
                         onChange={handleCapacityChange}
@@ -160,7 +227,7 @@ export default function Page() {
                     </div>
                 </div>
                 <div>
-                    <Link href="/admin-create-map"  className="dashboard-button">Continue</Link>
+                    <button type="submit" className="dashboard-button">Continue</button>
                 </div>
                 </form>
             </div>
