@@ -21,8 +21,8 @@ import Image from 'next/image';
 import logoImage from 'frontend/public/assets/logo.png';
 
 
-const pages = ['Profile', 'Dashboard', 'Blog'];
-const settings = ['Log Out'];
+const pages = ['Products', 'Pricing', 'Blog'];
+const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 
 function ResponsiveAppBar() {
@@ -48,24 +48,28 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
+  const handleProfileClick = () => {
+    router.push('/admin-profile');
+  };
+
   const handleLogout = async (event) => {
     event.preventDefault();
     setError(null);
 
     try {
-      await signOut(auth); // Use signOut directly from firebase/auth
-      console.log('User signed out from Firebase');
-
-      localStorage.removeItem('userToken'); // Clear the token from local storage
-      console.log('userToken removed from localStorage');
-
-      localStorage.removeItem('userDocID'); // Clear the userDocID from local storage
-      console.log('userDocID removed from localStorage');
-
-      localStorage.removeItem('userRole'); // Clear the userRole from local storage
-      console.log('userToken removed from localStorage');
-
-      router.push('/login');
+        await signOut(auth); // Use signOut directly from firebase/auth
+        console.log('User signed out from Firebase');
+        
+        localStorage.removeItem('userToken'); // Clear the token from local storage
+        console.log('userToken removed from localStorage');
+        
+        localStorage.removeItem('userDocID'); // Clear the userDocID from local storage
+        console.log('userDocID removed from localStorage');
+  
+        localStorage.removeItem('userRole'); // Clear the userRole from local storage
+        console.log('userToken removed from localStorage');
+  
+        router.push('/login');
     } catch (error) {
       setError(`Unexpected error: ${error.message}`);
       console.error('Error during logout:', error);
@@ -170,9 +174,17 @@ function ResponsiveAppBar() {
               {settings.map((setting) => (
                 <MenuItem
                   key={setting}
-                  onClick={setting === 'Log Out' ? handleLogout : handleCloseUserMenu}
+                  onClick={setting === 'Logout' ? handleLogout : handleCloseUserMenu}
                 >
-                  <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
+                  <Typography
+                    sx={{
+                      my: 0.1,
+                      fontFamily: 'TT Hoves Pro Trial, sans-serif',
+                      fontWeight: 'bold'
+                    }}
+                  >
+                    {setting}
+                  </Typography>
                 </MenuItem>
               ))}
 

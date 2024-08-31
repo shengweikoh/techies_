@@ -9,11 +9,11 @@ import '../src/app/components/routeProtection/popup.css';
 // Routes that don't require authentication
 const noAuthRequired = ['/', '/login', '/signup', '/count']; 
 // Routes that require user authentication
-const userRoutes = ['/user-home', '/user-view-event'];
+const userRoutes = ['/user-home', '/user-view-event', '/user-profile'];
 // Routes that require admin authentication
-const adminRoutes = ['/admin-home', '/admin-view-event', '/admin-create-event', '/admin-create-map'];
+const adminRoutes = ['/admin-home', '/admin-view-event', '/admin-create-event', '/admin-create-map', '/admin-profile'];
 // Routes that require staff authentication
-const staffRoutes = ['/staff-home', '/staff-view-event']; 
+const staffRoutes = ['/staff-home', '/staff-view-event', '/staff-profile']; 
 
 function MyApp({ Component, pageProps }) {
     const router = useRouter();
