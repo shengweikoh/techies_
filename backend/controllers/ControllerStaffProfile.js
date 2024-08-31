@@ -15,6 +15,7 @@ const getStaffProfile = async (req, res) => {
             staffName: staffDetails.Name,
             staffPhone: staffDetails.Phone,
             staffEmail: staffDetails.Email,
+            staffCompany: staffDetails.CompanyName
         });
     } catch (error) {
         return res.status(500).json({code: 500, message: `Error getting staff: ${error} `})
@@ -22,15 +23,15 @@ const getStaffProfile = async (req, res) => {
 }
 const updateStaffProfile = async (req, res) => {
     const staffID = req.query.staffID;
-    const { Email, Name, Phone } = req.body;
+    const { Email, Name, Phone, CompanyName } = req.body;
 
-    if (!Email || !Name || !Phone) {
+    if (!Email || !Name || !Phone || CompanyName) {
 		return res
 			.status(400)
 			.json({
 				code: 400,
 				message:
-					"User updated email/name/phone required",
+					"User updated email/name/phone/company name required",
 			});
 	}
     try {
@@ -38,6 +39,7 @@ const updateStaffProfile = async (req, res) => {
             Email: Email,
             Name: Name,
             Phone: Phone,
+            CompanyName: CompanyName,
         });
         return res.status(200).json({
             code: 200,
@@ -75,12 +77,12 @@ const getStaffEvent = async (req, res) => {
 }
 
 const createStaffProfile = async (req, res) => {
-    const { Email, Name, Phone } = req.body;
+    const { Email, Name, Phone, CompanyName } = req.body;
 
-    if (!Email || !Name || !Phone) {
+    if (!Email || !Name || !Phone || !CompanyName) {
         return res.status(400).json({
             code: 400,
-            message: "Email, Name, and Phone are required to create a staff profile.",
+            message: "Email, Name, Phone and CompanyName are required to create a staff profile.",
         });
     }
 
@@ -90,6 +92,7 @@ const createStaffProfile = async (req, res) => {
             Email,
             Name,
             Phone,
+            CompanyName,
         });
 
         return res.status(201).json({

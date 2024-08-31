@@ -16,7 +16,8 @@ router.get('/adminEvent', getAdminEvent);
 // {
 //     "Email": "admin@example.com",
 //     "Name": "John Doe",
-//     "Phone": "+1234567890"
+//     "Phone": "+1234567890",
+//     "IC": "S1234567S",
 //   }
 router.post('/createAdmin', createAdminProfile)
 

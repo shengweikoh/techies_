@@ -127,9 +127,6 @@ export default function Page() {
                     </div>
                     </div>
                 </div>
-                
-                {/* <Link href="/admin-create-event"  className="dashboard-button">Create Event</Link> */}
-                
             </div>
         </div>
         );

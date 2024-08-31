@@ -14,9 +14,10 @@ router.get('/staffEvent', getStaffEvent);
 
 // http://localhost:8001/staff/createStaff
 // {
-//     "Email": "admin@example.com",
+//     "Email": "staff@example.com",
 //     "Name": "John Doe",
-//     "Phone": "+1234567890"
+//     "Phone": "+1234567890",
+//     "CompanyName": "Grave"
 //   }
 router.post('/createStaff', createStaffProfile);
 

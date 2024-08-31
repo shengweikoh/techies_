@@ -15,16 +15,11 @@ const getAdminProfile = async (req, res) => {
         const admin = await db.collection("Admin").doc(adminID).get();
 
         const adminDetails = admin.data();
-        const adminEvent = await db.collection("Admin").doc(adminID).collection("EventIC").get();
-        const validAdminEvent = adminEvent.empty 
-        ? [] // Return an empty array if no documents are found
-        : adminEvent.docs.map(doc => doc.data()); // Map document data to an array
-
         return res.status(200).json({
             adminName: adminDetails.Name,
             adminPhone: adminDetails.Phone,
             adminEmail: adminDetails.Email,
-            adminEvent: validAdminEvent,
+            adminIC: adminDetails.IC,
         });
     } catch (error) {
         return res.status(500).json({code: 500, message: `Error getting admin: ${error} `})
@@ -33,7 +28,7 @@ const getAdminProfile = async (req, res) => {
 
 const updateAdminProfile = async (req, res) => {
     const adminID = req.query.adminID;
-    const { Email, Name, Phone } = req.body;
+    const { Email, Name, Phone, IC } = req.body;
 
     if (!adminID || typeof adminID !== 'string' || adminID.trim() === '') {
         return res.status(400).json({ 
@@ -42,13 +37,13 @@ const updateAdminProfile = async (req, res) => {
         });
     }
 
-    if (!Email || !Name || !Phone) {
+    if (!Email || !Name || !Phone || !IC) {
 		return res
 			.status(400)
 			.json({
 				code: 400,
 				message:
-					"User updated email/name/phone required",
+					"User updated email/name/phone/IC required",
 			});
 	}
 
@@ -69,6 +64,7 @@ const updateAdminProfile = async (req, res) => {
             Email: Email,
             Name: Name,
             Phone: Phone,
+            IC: IC
         });
 
         return res.status(200).json({
@@ -105,10 +101,10 @@ const getAdminEvent = async (req, res) => {
 }
 
 const createAdminProfile = async (req, res) => {
-    const { Email, Name, Phone } = req.body;
+    const { Email, Name, Phone, IC } = req.body;
 
     // Validate request body
-    if (!Email || !Name || !Phone) {
+    if (!Email || !Name || !Phone|| !IC) {
         return res.status(400).json({
             code: 400,
             message: "Email, Name, and Phone are required fields.",
@@ -120,6 +116,7 @@ const createAdminProfile = async (req, res) => {
             Email,
             Name,
             Phone,
+            IC,
         });
 
         return res.status(201).json({
