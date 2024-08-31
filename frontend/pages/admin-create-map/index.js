@@ -10,12 +10,16 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import axios from 'axios';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
 
 // Dynamically import the MapLabeling component with ssr: false
 const MapLabeling = dynamic(() => import('./MapLabeling'), { ssr: false });
 
 
 export default function Page() {
+    const router = useRouter();
+    const { eventDocID } = router.query;
+  
     const Dashboard = () => {
 
     const [isPictureVisible, setIsPictureVisible] = useState(false);
@@ -107,7 +111,7 @@ export default function Page() {
                     />
                 </div> */}
                 <div>
-                    <MapLabeling />
+                    <MapLabeling eventDocID={eventDocID} />
                 </div>
 
                 <div id="pictureOverlay" className={`picture-overlay ${isPictureVisible ? 'show' : ''}`}>

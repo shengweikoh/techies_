@@ -26,11 +26,12 @@ const createIcon = (color) => {
   });
 };
 
-const MapLabeling = () => {
+const MapLabeling = ( eventDocID ) => {
   const [markers, setMarkers] = useState([]);
   const [bounds, setBounds] = useState([]);
   const [selectedColor, setSelectedColor] = useState('#1E90FF'); // Default color: Blue
   const [selectedMarker, setSelectedMarker] = useState(null);
+  console.log(eventDocID)
 
   useEffect(() => {
     const img = new Image();
@@ -65,7 +66,7 @@ const MapLabeling = () => {
   const exportMarkersToDatabase = async () => {
     console.log(markers);
     try {
-      const response = await axios.post('http://localhost:8001/markers', {
+      const response = await axios.post(`http://localhost:8001/markers?eventID=${eventDocID}`, {
         markers,
       });
       console.log('Markers successfully sent to the server:', response.data);
