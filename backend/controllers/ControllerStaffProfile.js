@@ -64,7 +64,7 @@ const getStaffEvent = async (req, res) => {
         const staffEvent = await db.collection("Staff").doc(staffID).collection("EventIC").get();
         const validStaffEvent = staffEvent.empty 
         ? [] // Return an empty array if no documents are found
-        : staffEvent.docs.map(doc => doc.data().eventID); // Map document data to an array
+        : staffEvent.docs.map(doc => doc.data().eventID);
 
         console.log(validStaffEvent);
 

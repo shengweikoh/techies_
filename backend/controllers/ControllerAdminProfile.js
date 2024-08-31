@@ -87,10 +87,10 @@ const getAdminEvent = async (req, res) => {
         if (!admin.exists) {
             return res.status(404).json({ code: 404, message: "Admin not found" });
         }
-        const adminEventSnapshot = await db.collection("Admin").doc(adminID).collection("EventIC").get();
-        const eventIDs = adminEventSnapshot.empty 
+        const adminEvent = await db.collection("Admin").doc(adminID).collection("EventIC").get();
+        const eventIDs = adminEvent.empty 
             ? [] // If empty, return an empty array
-            : adminEventSnapshot.docs.map(doc => doc.data().EventID); // Extract the EventID field
+            : adminEvent.docs.map(doc => doc.data().eventID); // Extract the EventID field
 
         return res.status(200).json({
             eventIDs: eventIDs // Send back the array of Event IDs
