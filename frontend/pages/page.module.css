@@ -5,7 +5,7 @@
 .header {
   font-family: 'Lustria', sans-serif;
   font-size: 20px;
-  margin: 2px;
+  margin: 1px;
   padding: 10px;
   background-color: #f8f5ec;
   color: #37452b;
@@ -14,10 +14,10 @@
   align-items: center;
 }
 
-.logo {
-  font-size: 3em;
-  font-weight: bold;
-  padding-left:50px
+.logo img {
+  max-width: 250px;
+  max-height: auto;
+  margin-bottom: 1px;
 }
 
 .auth a {

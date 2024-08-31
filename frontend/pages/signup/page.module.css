@@ -19,6 +19,11 @@
     border-radius: 25px;
     overflow: hidden;
 }
+.logo {
+    max-width: 500px;
+    max-height: auto;
+    margin-bottom: 1px;
+  }
 .form {
     background: #ffffff;
     padding: 2rem;
