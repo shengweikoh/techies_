@@ -45,7 +45,6 @@ export default function Login() {
 
         // Store the token in local storage or cookies
         localStorage.setItem('userToken', token);
-
         const role = await getUserRole(user.email);
         console.log(role);
 

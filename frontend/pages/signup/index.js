@@ -6,7 +6,7 @@ import { auth, FirestoreDB } from '../../src/app/firebase/firebase_config';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation'; // Correct import for Next.js router
-
+import { signInWithEmailAndPassword, getIdToken } from 'firebase/auth';
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
@@ -36,20 +36,59 @@ export default function SignUp() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError(null);
-
+  
     if (password !== confirmPassword) {
       setError("Passwords do not match!");
       return;
     }
-
+  
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password, role);
-      // Save user information in Firestore
-      console.log('User created successfully', userCredential.user.uid); // Log only user ID
+      // Step 1: Create user in Firebase Authentication
+      const userSignup = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userSignup.user;
+      console.log('User created:', user.uid);
+  
+      // Step 2: Get the ID token for the signed-up user
+      const token = await getIdToken(user);
+  
+      // Step 3: Determine the Firestore collection based on the selected role
+      const collectionName = role;
+      console.log('Role:', role);
+    
+      // Step 4: Save user information in Firestore under the correct collection
+      await setDoc(doc(FirestoreDB, collectionName, user.uid), {
+        Email: user.email,
+        Name: "", // Empty string field for Name
+        Phone: 0, // Empty number field for Phone
+        CompanyName: "", // Empty string field for CompanyName
+      });
+      console.log('User document created in Firestore');
+  
+      // Step 5: Initialize the EventIC subcollection if needed
+      const eventICRef = doc(FirestoreDB, collectionName, user.uid, "EventIC", "placeholder"); 
+      await setDoc(eventICRef, { placeholder: true });
+  
+      // Step 6: Store the token and role in local storage
+      localStorage.setItem('userToken', token);
+      localStorage.setItem('userRole', role);
+      console.log('Token stored in local storage');
+  
+      // Step 7: Redirect based on user role
+      if (role === 'User') {
+        router.push('/user-home');
+      } else if (role === 'Admin') { 
+        router.push('/admin-home');
+      } else if (role === 'Staff') {
+        router.push('/staff-home');
+      } else {
+        setError('Login failed: User role not found');
+      }
     } catch (error) {
       console.error('Error creating user:', error.message); // Log only the error message
+      setError(`Sign-up failed: ${error.message}`);
     }
   };
+  
 
   return (
     <div className={styles.container}>

@@ -52,37 +52,17 @@ class FirebaseAuthentication {
 	};
 
 	// handle user registration
-	register(auth, email, password, role) {
+	register(auth, email, password) {
 		let errorCode = null;
-		let userData = null;
-
 		try {
-			const userCredentials = createUserWithEmailAndPassword(
-			auth,
-			email,
-			password
-			);
-			userData = userCredentials.user; // Get user data from Firebase Authentication
-			
-			console.log("register success", userCredentials);
-
-			// Determine the Firestore collection based on the role
-			const collectionName = role; // "User", "Admin", or "Staff"
-
-			// Add user to the appropriate Firestore collection
-		setDoc(doc(FirestoreDB, collectionName, userData.uid), {
-			email: email,
-			});
-
-			console.log(`User added.`);
-
+		  const userCredentials =  createUserWithEmailAndPassword(auth, email, password);
+		  console.log("register success", userCredentials);
 		} catch (error) {
-			console.error("register error");
-			errorCode = error.code;
+		  console.error("register error", error);
+		  errorCode = error.code;
 		}
-
 		return errorCode;
-	}
+	  }
 
     monitorAuthState() {
         onAuthStateChanged(this.auth, (user) => {
