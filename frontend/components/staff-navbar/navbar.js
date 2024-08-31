@@ -21,8 +21,8 @@ import Image from 'next/image';
 import logoImage from 'frontend/public/assets/logo.png';
 
 
-const pages = ['Profile', 'Dashboard', 'Blog'];
-const settings = ['Log Out'];
+const pages = ['Profile', 'Dashboard'];
+const settings = ['Logout'];
 
 
 function ResponsiveAppBar() {
