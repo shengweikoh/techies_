@@ -17,7 +17,7 @@ const getMapPicture = async (req, res) => {
 
 function getFilePathFromUrl(url) {
     const decodedUrl = decodeURIComponent(url);
-    const regex = /firebasestorage\.googleapis\.com\/v0\/b\/techies\.appspot\.com\/o\/(.+?)\?alt=media/;
+    const regex = /firebasestorage\.googleapis\.com\/v0\/b\/techie-11197\.appspot\.com\/o\/(.+?)\?alt=media/;
     const match = decodedUrl.match(regex);
     if (match) {
         return match[1].replace(/%2F/g, '/'); // Replace %2F with /

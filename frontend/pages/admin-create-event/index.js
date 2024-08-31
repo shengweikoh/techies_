@@ -4,8 +4,10 @@ import './page.css';
 import ResponsiveAppBar from '../../components/admin-navbar/navbar';
 import Link from "next/link";
 import axios from 'axios';
+import { useRouter } from 'next/router';
 
 export default function Page() {
+    const router = useRouter();
     const Dashboard = () => {
         const [eventName, setEventName] = useState("");
         const [organiserName, setOrganiserName] = useState("");
@@ -62,9 +64,11 @@ export default function Page() {
         return formattedDate;
     };
 
+    const userDocID = localStorage.getItem('userDocID');
+
     const eventData = {
-        EventName: eventName,
-        OrganiserName: organiserName,
+        Name: eventName,
+        Organiser: organiserName,
         OrganiserContact: Number(organiserContact),
         Location: location,
         Description: description,
@@ -72,7 +76,8 @@ export default function Page() {
         EndDT: convertDateTime(endDate + endTime),
         Price: Number(price),
         AgeLimit: Number(ageLimit),
-        Capacity: Number(capacity)
+        Capacity: Number(capacity),
+        OrganiserID: userDocID
     }
 
     try {
@@ -84,9 +89,12 @@ export default function Page() {
       });
       console.log('Event successfully created:', response.data);
 
-      // Save the eventID in session storage
-      sessionStorage.setItem('eventID', response.data.eventID);
-      alert(`Event created with ID: ${response.data.eventID}`);
+      // Assuming the server responds with the created event's ID
+      const eventDocID = response.data.eventDocID;
+  
+      // Navigate to the next page with eventDocID
+      router.push(`/admin-create-map?eventDocID=${eventDocID}`);
+  
     } catch (error) {
       console.error('Error creating event:', error);
     }
