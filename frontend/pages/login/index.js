@@ -51,7 +51,7 @@ export default function Login() {
         // Redirect based on user role
         if (role == 'User') {
           router.push('/user-home');
-        } else if (role == 'Admin') { 
+        } else if (role == 'Admin') {
           router.push('/admin-home');
         } else if (role == 'Staff') {
           router.push('/staff-home');
@@ -118,7 +118,7 @@ export default function Login() {
         // Redirect based on user role
         if (role == 'User') {
           router.push('/user-home');
-        } else if (role == 'Admin') { 
+        } else if (role == 'Admin') {
           router.push('/admin-home');
         } else if (role == 'Staff') {
           router.push('/staff-home');
@@ -140,7 +140,7 @@ export default function Login() {
   return (
     <div className={styles.container}>
       <form onSubmit={handleLogin} className={styles.form}>
-        <h2>Login Page</h2>
+        <img src="assets/logo.png" className={styles.logo} alt="Logo" />
         {error && <p className={styles.error}>{error}</p>}
         <div className={styles.inputGroup}>
           <label htmlFor="email" className={styles.label}>Email:</label>
@@ -178,12 +178,12 @@ export default function Login() {
           Login
         </button>
         <div className={styles.or}>or</div>
-        
+
         <button className={styles.googleButton} onClick={handleGoogleLogin}>
           <FaGoogle />
           <span>Login with Google</span>
         </button>
-        
+
         <div className={styles.signUpLink}>
           Don't have an account? <span onClick={() => router.push('/signup')}>Sign Up</span>
         </div>

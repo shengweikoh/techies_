@@ -85,7 +85,7 @@ export default function SignUp() {
   return (
     <div className={styles.container}>
       <form onSubmit={handleSubmit} className={styles.form}>
-        <h2>Sign Up Page</h2>
+      <img src="assets/logo.png" className={styles.logo} alt="Logo" />
         {error && <p className={styles.error}>{error}</p>}
         <div className={styles.inputGroup}>
           <label htmlFor="email" className={styles.label}>Email:</label>
