@@ -79,7 +79,46 @@ const createEvent = async (req, res) => {
     }
   };
 
+const getMarkers = async (req, res) => {
+    const eventID = req.query.eventID; // Assuming the event ID is passed as a query parameter
+
+    if (!eventID) {
+        return res.status(400).json({ code: 400, message: "Event ID is required" });
+    }
+
+    try {
+        // Get the map document associated with the event ID
+        const mapDocSnapshot = await db.collection('Maps').where('eventID', '==', eventID).get();
+
+        if (mapDocSnapshot.empty) {
+            return res.status(404).json({ code: 404, message: "Map document not found for the given event ID" });
+        }
+
+        // Extract the map document reference (assuming there's only one document)
+        const mapDocRef = mapDocSnapshot.docs[0].ref;
+
+        // Get all markers from the 'Marker' subcollection
+        const markersSnapshot = await mapDocRef.collection('Marker').get();
+
+        if (markersSnapshot.empty) {
+            return res.status(404).json({ code: 404, message: "No markers found for the given event" });
+        }
+
+        // Extract marker data from the snapshot
+        const markers = markersSnapshot.docs.map(doc => ({
+            id: doc.id, // Document ID (optional)
+            ...doc.data()
+        }));
+
+        return res.status(200).json({ code: 200, markers });
+    } catch (error) {
+        console.error('Error retrieving markers from Firestore:', error);
+        return res.status(500).json({ code: 500, message: `Error retrieving markers: ${error.message}` });
+    }
+};
+
 module.exports = {
     markerUpdate,
     createEvent,
+    getMarkers,
 };

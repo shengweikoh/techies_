@@ -44,7 +44,7 @@ const updateUserProfile = async (req, res) => {
             Phone: Phone,
             BloodType: BloodType,
             MedicalConditions: MedicalConditions,
-        })
+        });
         return res.status(200).json({
             code: 200,
             message: "User profile successfully updated.",
