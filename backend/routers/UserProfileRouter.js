@@ -1,5 +1,5 @@
 const express = require("express");
-const {getUserProfile,updateUserProfile,getUserEvent,getUserJoined,createUserProfile,saveEvent,joinEvent, getUserSaved} = require("../controllers/ControllerUserProfile.js");
+const {getUserProfile,updateUserProfile,getUserJoined,createUserProfile,saveEvent,joinEvent, getUserSaved} = require("../controllers/ControllerUserProfile.js");
 
 const router = express.Router();
 

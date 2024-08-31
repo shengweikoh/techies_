@@ -23,20 +23,19 @@ const getStaffProfile = async (req, res) => {
 }
 const updateStaffProfile = async (req, res) => {
     const staffID = req.query.staffID;
-    const { Email, Name, Phone, CompanyName } = req.body;
+    const { Name, Phone, CompanyName } = req.body;
 
-    if (!Email || !Name || !Phone || CompanyName) {
+    if ( !Name || !Phone || CompanyName) {
 		return res
 			.status(400)
 			.json({
 				code: 400,
 				message:
-					"User updated email/name/phone/company name required",
+					"Staff updated name/phone/company name required",
 			});
 	}
     try {
         await db.collection("Staff").doc(staffID).update({
-            Email: Email,
             Name: Name,
             Phone: Phone,
             CompanyName: CompanyName,

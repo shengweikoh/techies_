@@ -12,12 +12,12 @@ const getUserProfile = async (req, res) => {
         const userDetails = user.data();
 
         return res.status(200).json({
-            userName: userDetails.Name,
-            userPhone: userDetails.Phone,
-            userEmergencyContact: userDetails.EContact,
-            userEmail: userDetails.Email,
-            userBlood: userDetails.BloodType,
-            userMedical: userDetails.MedicalConditions,
+            Name: userDetails.Name,
+            Phone: userDetails.Phone,
+            EContact: userDetails.EContact,
+            Email: userDetails.Email,
+            Blood: userDetails.BloodType,
+            Medical: userDetails.MedicalConditions,
         });
     } catch (error) {
         return res.status(500).json({code: 500, message: `Error getting user: ${error} `})
@@ -26,21 +26,20 @@ const getUserProfile = async (req, res) => {
 
 const updateUserProfile = async (req, res) => {
     const userID = req.query.userID;
-    const { EContact, Email, Name, Phone, BloodType, MedicalConditions } = req.body;
+    const { EContact, Name, Phone, BloodType, MedicalConditions } = req.body;
 
-    if (!EContact || !Email || !Name || !Phone || !BloodType || !MedicalConditions) {
+    if (!EContact || !Name || !Phone || !BloodType || !MedicalConditions) {
 		return res
 			.status(400)
 			.json({
 				code: 400,
 				message:
-					"User updated emergency contact number/email/name/phone required",
+					"User updated emergency contact number/name/phone required",
 			});
 	}
     try {
         await db.collection("User").doc(userID).update({
             EContact: EContact,
-            Email: Email,
             Name: Name,
             Phone: Phone,
             BloodType: BloodType,

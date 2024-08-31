@@ -28,7 +28,7 @@ const getAdminProfile = async (req, res) => {
 
 const updateAdminProfile = async (req, res) => {
     const adminID = req.query.adminID;
-    const { Email, Name, Phone, IC } = req.body;
+    const { Name, Phone, IC } = req.body;
 
     if (!adminID || typeof adminID !== 'string' || adminID.trim() === '') {
         return res.status(400).json({ 
@@ -37,13 +37,13 @@ const updateAdminProfile = async (req, res) => {
         });
     }
 
-    if (!Email || !Name || !Phone || !IC) {
+    if (!Name || !Phone || !IC) {
 		return res
 			.status(400)
 			.json({
 				code: 400,
 				message:
-					"User updated email/name/phone/IC required",
+					"User updated name/phone/IC required",
 			});
 	}
 
@@ -61,7 +61,6 @@ const updateAdminProfile = async (req, res) => {
 
         // Update the admin profile with new values
         await adminRef.update({
-            Email: Email,
             Name: Name,
             Phone: Phone,
             IC: IC
