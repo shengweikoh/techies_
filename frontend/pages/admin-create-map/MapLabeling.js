@@ -26,30 +26,28 @@ const createIcon = (color) => {
   });
 };
 
-const MapLabeling = ( eventDocID ) => {
+const MapLabeling = ({ eventDocID, imgURL }) => {
   const [markers, setMarkers] = useState([]);
   const [bounds, setBounds] = useState([]);
   const [selectedColor, setSelectedColor] = useState('#1E90FF'); // Default color: Blue
   const [selectedMarker, setSelectedMarker] = useState(null);
-  console.log(eventDocID)
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const img = new Image();
-    img.src = '/assets/sketch1.jpg'; // Ensure this path is correct
-    img.onload = () => {
-      const imageWidth = img.width;
-      const imageHeight = img.height;
+      const img = new Image();
+      img.src = imgURL;
+      img.onload = () => {
+        const imageWidth = img.width;
+        const imageHeight = img.height;
 
-      // Define the latitude and longitude bounds based on your image size
-      // Adjust these values to fit your specific image
-      const swLat = 51.49; // South-West Latitude
-      const swLng = -0.08; // South-West Longitude
-      const neLat = swLat + (imageHeight / 10000); // North-East Latitude
-      const neLng = swLng + (imageWidth / 10000);  // North-East Longitude
-      
-      setBounds([[swLat, swLng], [neLat, neLng]]);
-    };
-  }, []);
+        const swLat = 51.49; // South-West Latitude
+        const swLng = -0.08; // South-West Longitude
+        const neLat = swLat + (imageHeight / 10000); // North-East Latitude
+        const neLng = swLng + (imageWidth / 10000);  // North-East Longitude
+        
+        setBounds([[swLat, swLng], [neLat, neLng]]);
+      };
+    });
 
   const handleMarkerClick = (index) => {
     setSelectedMarker(index);
@@ -91,10 +89,10 @@ const MapLabeling = ( eventDocID ) => {
         <div className="color-preview" style={{ backgroundColor: selectedColor }}></div>
       </div>
 
-      <MapContainer center={[51.50, -0.07]} zoom={14} style={{ height: "600px", width: "100%" }}>
-        {bounds.length > 0 && (
+      <MapContainer center={[51.50, -0.07]} zoom={13} style={{ height: "600px", width: "100%" }}>
+        {bounds.length > 0 && imgURL && (
           <ImageOverlay
-            url="/assets/sketch1.jpg"
+            url={imgURL} // Use the dynamic image URL here
             bounds={bounds}
           />
         )}

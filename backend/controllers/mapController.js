@@ -3,7 +3,7 @@ const { db, storage, bucket } = require("../firebase/firebase.js");
 const getMapPicture = async (req, res) => {
     const eventID = req.query.id;
     try {
-        const eventDoc = await db.collection("Event").doc(eventID).get();
+        const eventDoc = await db.collection("Events").doc(eventID).get();
         if (!eventDoc) {
             return res.status(404).send("Event not found");
         }
@@ -36,7 +36,7 @@ const updateMapPicture = async (req, res) => {
             await bucket.file(filePath).delete();
         }
         
-        await db.collection("Event").doc(eventID).update({
+        await db.collection("Events").doc(eventID).update({
             eventMapURL: newImageURL
         });
         return res.status(200).send('Old profile image deleted from storage and new profile image updated successfully');
