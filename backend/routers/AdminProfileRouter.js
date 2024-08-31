@@ -20,6 +20,7 @@ router.get('/adminEvent', getAdminEvent);
 //   }
 router.post('/createAdmin', createAdminProfile)
 
+// http://localhost:8001/admin/assignStaff?adminID=
 router.post('/assignStaff', assignEventStaff)
 
 module.exports = router;

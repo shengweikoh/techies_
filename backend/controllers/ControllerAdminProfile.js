@@ -136,21 +136,36 @@ const createAdminProfile = async (req, res) => {
     }
 }
 const assignEventStaff = async (req,res) => {
+    const { adminID } = req.query;
     const { staffEmail, eventID } = req.body;
 
-    if (!staffID || !eventID) {
+    if (!staffEmail || !eventID) {
         return res.status(400).json({
             code: 400,
-            message: "staffID and eventID  are required to assign an event.",
+            message: "staffEmail and eventID are required to assign an event.",
         });
     }
 
     try {
+        const staffSnapshot = await db.collection("Staff").where("Email", "==", staffEmail).get();
+
+        if (staffSnapshot.empty) {
+            return res.status(404).json({
+                code: 404,
+                message: "Staff with the provided email not found.",
+            });
+        }
+
+        const staffDoc = staffSnapshot.docs[0];
+        const staffID = staffDoc.id;
         // Reference to the staff member's subcollection
         const staffEventRef = db.collection("Staff").doc(staffID).collection("EventIC").doc(eventID);
 
         // Set event details in the subcollection
         await staffEventRef.set({ eventID: eventID });
+
+        const adminEventRef = db.collection("Admin").doc(adminID).collection("EventIC").doc(eventID).collection("StaffEmail").doc(staffEmail);
+        await adminEventRef.set({ Email: staffEmail});
 
         return res.status(200).json({
             code: 200,
