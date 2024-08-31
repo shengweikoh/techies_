@@ -26,7 +26,7 @@ const markerUpdate = async (req, res) => {
                   lng: marker.position.lng
               },
               label: marker.label,
-              code: marker.color, // Assuming 'color' is stored as 'code'
+              color: marker.color, // Assuming 'color' is stored as 'code'
               description: marker.description || "No description provided", // Add description field
               waitTime: marker.waitTime || 0 // Add wait time field, default to 0 if not provided
           });
