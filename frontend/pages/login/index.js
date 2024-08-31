@@ -42,7 +42,6 @@ export default function Login() {
       if (user) {
         console.log('Login successful');
         const token = await getIdToken(user);
-        console.log('User token:', token);
 
         // Store the token in local storage or cookies
         localStorage.setItem('userToken', token);
@@ -59,7 +58,6 @@ export default function Login() {
           router.push('/staff-home');
         } else {
           setError('Login failed: User role not found');
-          // setShowModal(true);
         }
       } else {
         setError('Login failed: User not found');
@@ -102,11 +100,41 @@ export default function Login() {
 
   const handleGoogleLogin = async () => {
     try {
-      await signInWithGoogle();
-      console.log('Google sign-in successful');
-      router.push('/');
+      // Use the googleLogin method from your FirebaseAuthentication instance
+      const { data, errorCode } = await FBInstanceAuth.googleLogin(auth);
+
+      if (data) {
+        console.log('Google Login successful');
+
+        // Get the user's token
+        const token = await getIdToken(data);
+
+        // Store the token in local storage or cookies
+        localStorage.setItem('userToken', token);
+
+        // Check the user's role
+        const role = await getUserRole(data.email);
+        console.log('User role:', role);
+
+        // Redirect based on user role
+        if (role == 'User') {
+          router.push('/user-home');
+        } else if (role == 'Admin') { 
+          router.push('/admin-home');
+        } else if (role == 'Staff') {
+          router.push('/staff-home');
+        } else {
+          setError('Login failed: User role not found');
+          // setShowModal(true);
+        }
+      } else {
+        setError(`Login failed: ${errorCode || 'User not found'}`);
+        // Optionally, you can show a modal or some feedback to the user
+        // setShowModal(true);
+      }
     } catch (error) {
       setError(`Google login failed: ${error.message}`);
+      console.error('Error during Google login:', error);
     }
   };
 

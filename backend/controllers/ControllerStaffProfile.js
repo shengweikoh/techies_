@@ -51,6 +51,7 @@ const updateStaffProfile = async (req, res) => {
         });
     }
 }
+
 const getStaffEvent = async (req, res) => {
     const staffID = req.query.staffID;
     try {
@@ -61,7 +62,9 @@ const getStaffEvent = async (req, res) => {
         const staffEvent = await db.collection("Staff").doc(staffID).collection("EventIC").get();
         const validStaffEvent = staffEvent.empty 
         ? [] // Return an empty array if no documents are found
-        : staffEvent.docs.map(doc => doc.data().EventID); // Map document data to an array
+        : staffEvent.docs.map(doc => doc.data().eventID); // Map document data to an array
+
+        console.log(validStaffEvent);
 
         return res.status(200).json({
             validStaffEvent: validStaffEvent
@@ -70,6 +73,7 @@ const getStaffEvent = async (req, res) => {
         return res.status(500).json({code: 500, message: `Error getting staff: ${error} `})
     }
 }
+
 const createStaffProfile = async (req, res) => {
     const { Email, Name, Phone } = req.body;
 

@@ -12,6 +12,7 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [role, setRole] = useState("User");
   const [error, setError] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
@@ -28,6 +29,10 @@ export default function SignUp() {
     setConfirmPassword(event.target.value);
   };
 
+  const handleRoleChange = (event) => {
+    setRole(event.target.value);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError(null);
@@ -38,19 +43,11 @@ export default function SignUp() {
     }
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password, role);
       // Save user information in Firestore
-      await setDoc(doc(FirestoreDB, "User", user.uid), {
-        email: user.email,
-        role: "user",
-      });
-
-      console.log('Sign-up successful');
-      router.push('/'); // Redirect to homepage or login after successful sign-up
+      console.log('User created successfully', userCredential.user.uid); // Log only user ID
     } catch (error) {
-      setError(`Sign-up failed: ${error.message}`);
+      console.error('Error creating user:', error.message); // Log only the error message
     }
   };
 
@@ -91,6 +88,38 @@ export default function SignUp() {
             required
             className={styles.input}
           />
+        </div>
+        <div className={styles.inputGroup}>
+          <label className={styles.label}>Select Role:</label>
+          <div className={styles.radioGroup}>
+            <label>
+              <input
+                type="radio"
+                value="User"
+                checked={role === "User"}
+                onChange={handleRoleChange}
+              />
+              User
+            </label>
+            <label>
+              <input
+                type="radio"
+                value="Admin"
+                checked={role === "Admin"}
+                onChange={handleRoleChange}
+              />
+              Admin
+            </label>
+            <label>
+              <input
+                type="radio"
+                value="Staff"
+                checked={role === "Staff"}
+                onChange={handleRoleChange}
+              />
+              Staff
+            </label>
+          </div>
         </div>
         <div className={styles.checkboxContainer}>
             <label>

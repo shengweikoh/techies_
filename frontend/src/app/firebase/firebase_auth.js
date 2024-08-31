@@ -25,22 +25,6 @@ class FirebaseAuthentication {
         return { data, errorCode };
     }
 
-	// handle user login with google
-	// googleLogin = async function (auth) {
-	// 	let errorCode = null;
-	// 	const provider = new GoogleAuthProvider();
-	// 	await signInWithPopup(auth, provider)
-	// 		.then(async (result) => {
-	// 			console.log("google login success", result);
-	// 		})
-	// 		.catch((error) => {
-	// 			console.error("google login error", error);
-	// 			errorCode = error.code;
-	// 		});
-	// 	return errorCode;
-	// };
-
-    
     googleLogin = async function (auth) {
         let errorCode = null;
         let data = null;
@@ -68,18 +52,37 @@ class FirebaseAuthentication {
 	};
 
 	// handle user registration
-	register = async function (auth, email, password) {
+	register(auth, email, password, role) {
 		let errorCode = null;
-		await createUserWithEmailAndPassword(auth, email, password)
-			.then((userCredentials) => {
-				console.log("register success", userCredentials);
-			})
-			.catch((error) => {
-				console.error("register error", error);
-				errorCode = error.code;
+		let userData = null;
+
+		try {
+			const userCredentials = createUserWithEmailAndPassword(
+			auth,
+			email,
+			password
+			);
+			userData = userCredentials.user; // Get user data from Firebase Authentication
+			
+			console.log("register success", userCredentials);
+
+			// Determine the Firestore collection based on the role
+			const collectionName = role; // "User", "Admin", or "Staff"
+
+			// Add user to the appropriate Firestore collection
+		setDoc(doc(FirestoreDB, collectionName, userData.uid), {
+			email: email,
 			});
+
+			console.log(`User added.`);
+
+		} catch (error) {
+			console.error("register error");
+			errorCode = error.code;
+		}
+
 		return errorCode;
-	};
+	}
 
     monitorAuthState() {
         onAuthStateChanged(this.auth, (user) => {
