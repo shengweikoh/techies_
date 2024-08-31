@@ -40,7 +40,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 ## Introduction
 (Ctrl + Shift + V to open markdown preview in VS Code ). 
 
-Our application aims to solve the issue of overcrowding in events and improve the safety and experience of attendees. We aim to provide features such as an interactive map that displays Points of Interest and congestion levels, helping users navigate and avoid crowded areas. Users can provide essential medical details for emergency purposes. Organizers have the ability to create and edit events, upload maps, and set up trackers to monitor and manage attendee limits. Staff members can track crowd levels, manage assigned locations, and review emergency protocols. 
+CrowdDaddy aims to solve the issue of overcrowding in events and improve the safety and experience of attendees. We aim to provide features such as an interactive map that displays Points of Interest and congestion levels, helping users navigate and avoid crowded areas. Users can provide essential medical details for emergency purposes. Organizers have the ability to create and edit events, upload maps, and set up trackers to monitor and manage attendee limits. Staff members can track crowd levels, manage assigned locations, and review emergency protocols. 
 
 ## Table of Contents
 1. File directory
