@@ -32,19 +32,19 @@ app.get("/", (req, res) => {
 	res.status(200).json("Welcome, your app is working well");
 });
 
-app.use("/controllers/ControllerEventDetail", require("./routers/eventDetailsRouter.js"));
-app.use("/controllers/ControllerAdminProfile", require("./routers/adminProfileRouter.js"));
-// app.use("/controllers/ControllerStaffProfile", require("./routers/staffProfileRouter.js"));
+//app.use("/controllers/ControllerEventDetail", require("./routers/eventDetailsRouter.js"));
+//app.use("/controllers/ControllerAdminProfile", require("./routers/adminProfileRouter.js"));
+//app.use("/controllers/ControllerStaffProfile", require("./routers/staffProfileRouter.js"));
 // app.use("/controllers/ControllerUserProfile", require("./routers/userProfileRouter.js"));
 
 // // for user to view events
-// app.use("/user/event", require("./routers/userEventRouter.js"));
+//app.use("/user/event", require("./routers/userEventRouter.js"));
 
 // for user to view profile
-app.use("/user/profile", require("./routers/userProfileRouter.js"));
+app.use("/user", require("./routers/userProfileRouter.js"));
 
 // for staff to view profile
-app.use("/staff/profile", require("./routers/staffProfileRouter.js"));	
+app.use("/staff", require("./routers/staffProfileRouter.js"));	
 
 // for admin to view profile 
 app.use("/admin", require("./routers/adminProfileRouter.js"));

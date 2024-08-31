@@ -3,12 +3,16 @@ const {getUserProfile,updateUserProfile,getUserEvent,createUserProfile} = requir
 
 const router = express.Router();
 
-router.get('/', getUserProfile);
+//http://localhost:8001/user/profile?userID=
+router.get('/profile', getUserProfile);
 
-router.get('/update', updateUserProfile);
+//http://localhost:8001/user/update?userID=
+router.post('/update', updateUserProfile);
 
+//http://localhost:8001/user/userEvent?userID=Si9X1z0v8EXP2312FYG0
 router.get('/userEvent', getUserEvent);
 
-router.get('/createUser', createUserProfile);
+//http://localhost:8001/user/createUser
+router.post('/createUser', createUserProfile);
 
 module.exports = router;

@@ -2,7 +2,7 @@
 const {db} = require("../firebase/firebase.js");
 
 const getUserProfile = async (req, res) => {
-    const userID = req.query.id;
+    const userID = req.query.userID;
     try {
         const user = await db.collection("User").doc(userID).get();
         if (!user.exists) {
@@ -23,7 +23,7 @@ const getUserProfile = async (req, res) => {
 }
 
 const updateUserProfile = async (req, res) => {
-    const userID = req.query.id;
+    const userID = req.query.userID;
     const { EContact, Email, Name, Phone } = req.body;
 
     if (!EContact || !Email || !Name || !Phone) {
@@ -56,7 +56,7 @@ const updateUserProfile = async (req, res) => {
 }
 
 const getUserEvent = async (req, res) => {
-    const userID = req.query.id;
+    const userID = req.query.userID;
     try {
         const user = await db.collection("User").doc(userID).get();
         if (!user.exists) {
@@ -65,7 +65,7 @@ const getUserEvent = async (req, res) => {
         const userEvent = await db.collection("User").doc(userID).collection("Events").get();
         const validUserEvent = userEvent.empty 
         ? [] // Return an empty array if no documents are found
-        : userEvent.docs.map(doc => doc.data()); // Map document data to an array
+        : userEvent.docs.map(doc => doc.data().EventID); // Map document data to an array
 
         return res.status(200).json({
             validUserEvent: validUserEvent

@@ -2,7 +2,7 @@
 const {db} = require("../firebase/firebase.js");
 
 const getStaffProfile = async (req, res) => {
-    const staffID = req.query.id;
+    const staffID = req.query.staffID;
     try {
         const staff = await db.collection("Staff").doc(staffID).get();
         if (!staff.exists) {
@@ -10,23 +10,18 @@ const getStaffProfile = async (req, res) => {
         }
 
         const staffDetails = staff.data();
-        const staffEvent = await db.collection("Staff").doc(staffID).collection("EventIC").get();
-        const validStaffEvent = staffEvent.empty
-        ? [] // Return an empty array if no documents are found
-        : staffEvent.docs.map(doc => doc.data()); // Map document data to an array
-
+        
         return res.status(200).json({
             staffName: staffDetails.Name,
             staffPhone: staffDetails.Phone,
             staffEmail: staffDetails.Email,
-            staffEvent: validStaffEvent,
         });
     } catch (error) {
         return res.status(500).json({code: 500, message: `Error getting staff: ${error} `})
     }
 }
 const updateStaffProfile = async (req, res) => {
-    const staffID = req.query.id;
+    const staffID = req.query.staffID;
     const { Email, Name, Phone } = req.body;
 
     if (!Email || !Name || !Phone) {
@@ -57,7 +52,7 @@ const updateStaffProfile = async (req, res) => {
     }
 }
 const getStaffEvent = async (req, res) => {
-    const staffID = req.query.id;
+    const staffID = req.query.staffID;
     try {
         const staff = await db.collection("Staff").doc(staffID).get();
         if (!staff.exists) {
@@ -66,7 +61,7 @@ const getStaffEvent = async (req, res) => {
         const staffEvent = await db.collection("Staff").doc(staffID).collection("EventIC").get();
         const validStaffEvent = staffEvent.empty 
         ? [] // Return an empty array if no documents are found
-        : staffEvent.docs.map(doc => doc.data()); // Map document data to an array
+        : staffEvent.docs.map(doc => doc.data().EventID); // Map document data to an array
 
         return res.status(200).json({
             validStaffEvent: validStaffEvent

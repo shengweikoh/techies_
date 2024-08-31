@@ -3,12 +3,21 @@ const {getStaffProfile,updateStaffProfile,getStaffEvent,createStaffProfile} = re
 
 const router = express.Router();
 
-router.get('/', getStaffProfile);
+// http://localhost:8001/staff/profile?staffID=
+router.get('/profile', getStaffProfile);
 
-router.get('/update', updateStaffProfile);
+// http://localhost:8001/staff/update?staffID=
+router.post('/update', updateStaffProfile);
 
+// http://localhost:8001/staff/staffEvent?staffID=
 router.get('/staffEvent', getStaffEvent);
 
-router.get('/createStaff', createStaffProfile);
+// http://localhost:8001/staff/createStaff
+// {
+//     "Email": "admin@example.com",
+//     "Name": "John Doe",
+//     "Phone": "+1234567890"
+//   }
+router.post('/createStaff', createStaffProfile);
 
 module.exports = router;
