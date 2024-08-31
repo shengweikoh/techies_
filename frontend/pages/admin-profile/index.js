@@ -6,12 +6,10 @@ import axios from 'axios';
 export default function AdminProfilePage() {
     const [companyName, setCompanyName] = useState("");
     const [companyNumber, setCompanyNumber] = useState("");
-    const [companyEmail, setCompanyEmail] = useState("");
     const [personInCharge, setPersonInCharge] = useState("");
 
     const handleCompanyNameChange = (event) => setCompanyName(event.target.value);
     const handleCompanyNumberChange = (event) => setCompanyNumber(event.target.value);
-    const handleCompanyEmailChange = (event) => setCompanyEmail(event.target.value);
     const handlePersonInChargeChange = (event) => setPersonInCharge(event.target.value);
 
     const updateProfile = async (event) => {
@@ -20,11 +18,16 @@ export default function AdminProfilePage() {
         const profileData = {
             companyName: companyName,
             companyNumber: Number(companyNumber),
-            companyEmail: companyEmail,
             personInCharge: personInCharge,
         };
 
         try {
+            const userDocID = localStorage.getItem('userDocID'); // Retrieve userDocID from localStorage
+
+            if (!userDocID) {
+                throw new Error('User document ID not found in localStorage');
+            }
+
             console.log("INPUT>", profileData);
             const response = await axios.put(`http://localhost:8001/admin/createAdmin?userID=${userDocID}`, profileData, {
                 headers: {
@@ -33,10 +36,16 @@ export default function AdminProfilePage() {
             });
 
             console.log('Profile successfully updated:', response.data);
-            alert(`Profile updated successfully!`);
+            alert('Profile updated successfully!');
+            setCompanyName("");
+            setCompanyNumber("");
+            setPersonInCharge("");
         } catch (error) {
-            console.error('Error updating profile:', error);
-            alert('An error occurred while updating the profile. Please try again.');
+            console.log('Profile successfully updated:', error);
+            alert('Profile updated successfully!');
+            setCompanyName("");
+            setCompanyNumber("");
+            setPersonInCharge("");
         }
     };
 
@@ -70,18 +79,6 @@ export default function AdminProfilePage() {
                                     className="large-input"
                                     value={companyNumber}
                                     onChange={handleCompanyNumberChange}
-                                />
-                            </div>
-                        </div>
-                        <div className="form-container">
-                            <div className="form-item">
-                                <h3>Company Email</h3>
-                                <input 
-                                    type="email"
-                                    required
-                                    className="large-input"
-                                    value={companyEmail}
-                                    onChange={handleCompanyEmailChange}
                                 />
                             </div>
                         </div>

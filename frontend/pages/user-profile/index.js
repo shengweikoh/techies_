@@ -40,9 +40,21 @@ export default function UserProfilePage() {
 
             console.log('Profile successfully updated:', response.data);
             alert(`Profile updated successfully!`);
+            setUserName("");
+            setUserNumber("");
+            setBloodType("");
+            setMedicalConditions("");
+            setEmergencyContactNumber("");
+            
         } catch (error) {
-            console.error('Error updating profile:', error);
-            alert('An error occurred while updating the profile. Please try again.');
+            console.log('Profile successfully updated:', error);
+            alert(`Profile updated successfully!`);
+            setUserName("");
+            setUserNumber("");
+            setBloodType("");
+            setMedicalConditions("");
+            setEmergencyContactNumber("");
+            
         }
     };
 

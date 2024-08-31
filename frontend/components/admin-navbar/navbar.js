@@ -20,7 +20,6 @@ import Link from 'next/link';
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
-
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -44,6 +43,10 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
+  const handleProfileClick = () => {
+    router.push('/admin-profile');
+  };
+
   const handleLogout = async (event) => {
     event.preventDefault();
     setError(null);
@@ -59,7 +62,7 @@ function ResponsiveAppBar() {
         console.log('userDocID removed from localStorage');
   
         localStorage.removeItem('userRole'); // Clear the userRole from local storage
-        console.log('userToken removed from localStorage');
+        console.log('userRole removed from localStorage');
   
         router.push('/login');
     } catch (error) {
@@ -189,7 +192,15 @@ function ResponsiveAppBar() {
               {settings.map((setting) => (
                 <MenuItem
                   key={setting}
-                  onClick={setting === 'Logout' ? handleLogout : handleCloseUserMenu}
+                  onClick={() => {
+                    if (setting === 'Profile') {
+                      handleProfileClick(); // Navigate to /admin-profile
+                    } else if (setting === 'Logout') {
+                      handleLogout(); // Logout
+                    } else {
+                      handleCloseUserMenu(); // Close menu for other settings
+                    }
+                  }}
                 >
                   <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
                 </MenuItem>
