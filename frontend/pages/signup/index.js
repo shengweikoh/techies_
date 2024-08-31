@@ -57,16 +57,8 @@ export default function SignUp() {
     
       // Step 4: Save user information in Firestore under the correct collection
       await setDoc(doc(FirestoreDB, collectionName, user.uid), {
-        Email: user.email,
-        Name: "", // Empty string field for Name
-        Phone: 0, // Empty number field for Phone
-        CompanyName: "", // Empty string field for CompanyName
-      });
+        Email: user.email,});
       console.log('User document created in Firestore');
-  
-      // Step 5: Initialize the EventIC subcollection if needed
-      const eventICRef = doc(FirestoreDB, collectionName, user.uid, "EventIC", "placeholder"); 
-      await setDoc(eventICRef, { placeholder: true });
   
       // Step 6: Store the token and role in local storage
       localStorage.setItem('userToken', token);
