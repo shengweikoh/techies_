@@ -133,7 +133,7 @@ const MapLabeling = ({ eventDocID, imgURL }) => {
       
       <br />
       <div className='buttons-container'>
-        <Link href="/admin-home" className='dashboard-button'>
+        <Link href="/staff-home" className='dashboard-button'>
           Save
         </Link>
       </div>

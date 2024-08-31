@@ -21,9 +21,8 @@ import Image from 'next/image';
 import logoImage from 'frontend/public/assets/logo.png';
 
 
-const pages = ['Profile', 'Dashboard'];
-const settings = ['Logout'];
-
+const pages = ['Profile'];
+const settings = ['Log Out'];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -48,23 +47,27 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
+  const handleProfileClick = () => {
+    router.push('/staff-profile');
+  };
+
   const handleLogout = async (event) => {
     event.preventDefault();
     setError(null);
 
     try {
-      await signOut(auth); // Use signOut directly from firebase/auth
+      await signOut(auth);
       console.log('User signed out from Firebase');
-
-      localStorage.removeItem('userToken'); // Clear the token from local storage
+      
+      localStorage.removeItem('userToken');
       console.log('userToken removed from localStorage');
-
-      localStorage.removeItem('userDocID'); // Clear the userDocID from local storage
+      
+      localStorage.removeItem('userDocID');
       console.log('userDocID removed from localStorage');
-
-      localStorage.removeItem('userRole'); // Clear the userRole from local storage
+  
+      localStorage.removeItem('userRole');
       console.log('userToken removed from localStorage');
-
+  
       router.push('/login');
     } catch (error) {
       setError(`Unexpected error: ${error.message}`);
@@ -83,7 +86,7 @@ function ResponsiveAppBar() {
       }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Link href="../../admin-home" style={{ textDecoration: "none" }}>
+          <Link href="../../staff-home" style={{ textDecoration: "none" }}>
             <Image
               src={logoImage}
               alt="Logo"
@@ -120,7 +123,7 @@ function ResponsiveAppBar() {
               sx={{ display: { xs: 'block', md: 'none' } }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem key={page} onClick={handleProfileClick}>
                   <Typography sx={{ textAlign: 'center' }}>{page}</Typography>
                 </MenuItem>
               ))}
@@ -128,13 +131,14 @@ function ResponsiveAppBar() {
           </Box>
           <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={{ pr: 2, flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-start' }}>
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
+                onClick={handleProfileClick}
                 sx={{
                   my: 2,
+                  fontSize: '15px',
                   color: '#37452b',
                   fontFamily: 'TT Hoves Pro Trial, sans-serif'
                 }}
@@ -146,7 +150,7 @@ function ResponsiveAppBar() {
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
-            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar src="/assets/avatar.png" />
               </IconButton>
             </Tooltip>
@@ -168,19 +172,19 @@ function ResponsiveAppBar() {
             >
               {settings.map((setting) => (
                 <MenuItem
-                key={setting}
-                onClick={setting === 'Log Out' ? handleLogout : handleCloseUserMenu}
-              >
-                <Typography
-                  sx={{
-                    my: 0.1,
-                    fontFamily: 'TT Hoves Pro Trial, sans-serif',
-                    fontWeight: 'bold'
-                  }}
+                  key={setting}
+                  onClick={setting === 'Log Out' ? handleLogout : handleCloseUserMenu}
                 >
-                  {setting}
-                </Typography>
-              </MenuItem>
+                  <Typography
+                    sx={{
+                      my: 0.1,
+                      fontFamily: 'TT Hoves Pro Trial, sans-serif',
+                      fontWeight: 'bold'
+                    }}
+                  >
+                    {setting}
+                  </Typography>
+                </MenuItem>
               ))}
 
             </Menu>
