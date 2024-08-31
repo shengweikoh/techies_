@@ -90,7 +90,7 @@ export default function Page() {
       console.log('Event successfully created:', response.data);
 
       // Assuming the server responds with the created event's ID
-      const eventDocID = response.data.eventDocID;
+      const eventDocID = response.data.eventID;
   
       // Navigate to the next page with eventDocID
       router.push(`/admin-create-map?eventDocID=${eventDocID}`);
