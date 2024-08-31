@@ -42,7 +42,7 @@ const markerUpdate = async (req, res) => {
 // controllers/markerUpdateController.js
 const createEvent = async (req, res) => {
     // Destructure event details from request body
-    const { AgeLimit, Capacity, Description, EndDT, Location, Name, Organiser, OrganiserContact, Price, StartDT } = req.body;
+    const { AgeLimit, Capacity, Description, EndDT, Location, Name, Organiser, OrganiserContact, OrganiserID, Price, StartDT } = req.body;
   
     try {
       // Create a new document in the "Events" collection with the provided data
@@ -55,6 +55,7 @@ const createEvent = async (req, res) => {
         Name: Name,
         Organiser: Organiser,
         OrganiserContact: Number(OrganiserContact),
+        OrganiserID: OrganiserID,
         Price: Number(Price),
         StartDT: new Date(StartDT),
         createdAt: new Date(),
@@ -64,6 +65,10 @@ const createEvent = async (req, res) => {
       const eventID = eventDocRef.id;
       console.log('Event created with ID:', eventID);
   
+      const adminRef = db.collection("Admin").doc(OrganiserID).collection("EventIC").doc(eventID);
+      await adminRef.set({ eventID: eventID });
+
+      
       // Send the event ID back to the client
       return res.status(200).json({ eventID: eventID, message: "Event successfully created" });
     } catch (error) {
