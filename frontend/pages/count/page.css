@@ -1,0 +1,19 @@
+/* countPage.module.css */
+
+.container {
+    text-align: center;
+    margin-top: 50px;
+  }
+  
+  .countDisplay {
+    font-size: 48px;
+    margin: 20px;
+  }
+  
+  .button {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 24px;
+    cursor: pointer;
+  }
+  
