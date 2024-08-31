@@ -16,6 +16,8 @@ const getUserProfile = async (req, res) => {
             userPhone: userDetails.Phone,
             userEmergencyContact: userDetails.EContact,
             userEmail: userDetails.Email,
+            userBlood: userDetails.BloodType,
+            userMedical: userDetails.MedicalConditions,
         });
     } catch (error) {
         return res.status(500).json({code: 500, message: `Error getting user: ${error} `})
@@ -24,9 +26,9 @@ const getUserProfile = async (req, res) => {
 
 const updateUserProfile = async (req, res) => {
     const userID = req.query.userID;
-    const { EContact, Email, Name, Phone } = req.body;
+    const { EContact, Email, Name, Phone, BloodType, MedicalConditions } = req.body;
 
-    if (!EContact || !Email || !Name || !Phone) {
+    if (!EContact || !Email || !Name || !Phone || !BloodType || !MedicalConditions) {
 		return res
 			.status(400)
 			.json({
@@ -41,6 +43,8 @@ const updateUserProfile = async (req, res) => {
             Email: Email,
             Name: Name,
             Phone: Phone,
+            BloodType: BloodType,
+            MedicalConditions: MedicalConditions,
         })
         return res.status(200).json({
             code: 200,
@@ -55,17 +59,17 @@ const updateUserProfile = async (req, res) => {
     }
 }
 
-const getUserEvent = async (req, res) => {
+const getUserSaved = async (req, res) => {
     const userID = req.query.userID;
     try {
         const user = await db.collection("User").doc(userID).get();
         if (!user.exists) {
             return res.status(404).json({ code: 404, message: "User not found" });
         }
-        const userEvent = await db.collection("User").doc(userID).collection("Events").get();
+        const userEvent = await db.collection("User").doc(userID).collection("SavedEvent").get();
         const validUserEvent = userEvent.empty 
         ? [] // Return an empty array if no documents are found
-        : userEvent.docs.map(doc => doc.data().EventID); // Map document data to an array
+        : userEvent.docs.map(doc => doc.data().eventID); // Map document data to an array
 
         return res.status(200).json({
             validUserEvent: validUserEvent
@@ -74,10 +78,31 @@ const getUserEvent = async (req, res) => {
         return res.status(500).json({code: 500, message: `Error getting user: ${error} `})
     }
 }
-const createUserProfile = async (req, res) => {
-    const { EContact, Email, Name, Phone } = req.body;
 
-    if (!EContact || !Email || !Name || !Phone) {
+const getUserJoined = async (req, res) => {
+    const userID = req.query.userID;
+    try {
+        const user = await db.collection("User").doc(userID).get();
+        if (!user.exists) {
+            return res.status(404).json({ code: 404, message: "User not found" });
+        }
+        const userEvent = await db.collection("User").doc(userID).collection("JoinedEvents").get();
+        const validUserEvent = userEvent.empty 
+        ? [] // Return an empty array if no documents are found
+        : userEvent.docs.map(doc => doc.data().eventID); // Map document data to an array
+
+        return res.status(200).json({
+            validUserEvent: validUserEvent
+        });
+    } catch (error) {
+        return res.status(500).json({code: 500, message: `Error getting user: ${error} `})
+    }
+}
+
+const createUserProfile = async (req, res) => {
+    const { EContact, Email, Name, Phone, BloodType, MedicalConditions } = req.body;
+
+    if (!EContact || !Email || !Name || !Phone || !BloodType || !MedicalConditions) {
         return res.status(400).json({
             code: 400,
             message: "Emergency contact and Email, Name, and Phone are required to create a user profile.",
@@ -90,6 +115,8 @@ const createUserProfile = async (req, res) => {
             Email,
             Name,
             Phone,
+            BloodType,
+            MedicalConditions,
         });
 
         return res.status(201).json({
@@ -150,7 +177,7 @@ const joinEvent = async (req,res) => {
 
     try {
         // Reference to the user's Events subcollection
-        const userEventRef = db.collection("User").doc(userID).collection("Events").doc(eventID);
+        const userEventRef = db.collection("User").doc(userID).collection("JoinedEvents").doc(eventID);
 
         // Set the eventID in the subcollection (using the eventID as the document ID)
         await userEventRef.set({ eventID: eventID });
@@ -177,7 +204,8 @@ const joinEvent = async (req,res) => {
 module.exports = {
     getUserProfile,
     updateUserProfile,
-    getUserEvent,
+    getUserSaved,
+    getUserJoined,
     createUserProfile,
     saveEvent,
     joinEvent,
