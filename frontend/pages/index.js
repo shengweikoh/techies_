@@ -15,7 +15,9 @@ export default function Home() {
   return (
     <div>
       <header className={styles.header}>
-        <div className={styles.logo}>app name</div>
+        <div className={styles.logo}>
+        <img src="assets/logo.png"></img>
+        </div>
         <div className={styles.auth}>
           <a href="/login">log in</a>
           <a href="/signup">sign up</a>
