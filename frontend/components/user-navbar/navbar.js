@@ -86,7 +86,7 @@ function ResponsiveAppBar() {
       }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Link href="../../admin-home" style={{ textDecoration: "none" }}>
+          <Link href="../../user-home" style={{ textDecoration: "none" }}>
             <Image
               src={logoImage}
               alt="Logo"
