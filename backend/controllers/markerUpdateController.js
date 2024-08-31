@@ -42,6 +42,46 @@ const markerUpdate = async (req, res) => {
     }
 };
 
+const updateMarkerTime = async (req, res) => {
+  const { markers } = req.body; // Markers with updated wait times
+  const eventID = req.query.eventID; // Event ID to locate the correct map document
+
+  if (!markers || !Array.isArray(markers) || !eventID) {
+      return res.status(400).json({ code: 400, message: "Invalid input data" });
+  }
+
+  try {
+      // Get the map document associated with the event ID
+      const mapDocSnapshot = await db.collection('Maps').where('eventID', '==', eventID).get();
+
+      if (mapDocSnapshot.empty) {
+          return res.status(404).json({ code: 404, message: "Map document not found" });
+      }
+
+      const mapDocRef = mapDocSnapshot.docs[0].ref;
+
+      // Create a batch to perform multiple writes in a single request
+      const batch = db.batch();
+
+      // Iterate over markers and update the waitTime
+      markers.forEach((marker) => {
+          const markerDocRef = mapDocRef.collection('Marker').doc(marker.id); // Assuming markers have an id
+          batch.update(markerDocRef, {
+              waitTime: marker.waitTime // Update the wait time
+          });
+      });
+
+      // Commit the batch write
+      await batch.commit();
+
+      return res.status(200).json({ code: 200, message: "Marker wait times successfully updated" });
+  } catch (error) {
+      console.error('Error updating marker wait times:', error);
+      return res.status(500).json({ code: 500, message: `Error updating marker wait times: ${error.message}` });
+  }
+};
+
+
 // controllers/markerUpdateController.js
 const createEvent = async (req, res) => {
     // Destructure event details from request body
@@ -122,4 +162,5 @@ module.exports = {
     markerUpdate,
     createEvent,
     getMarkers,
+    updateMarkerTime,
 };
