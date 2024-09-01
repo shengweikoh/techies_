@@ -121,6 +121,16 @@ export default function SignUp() {
             className={styles.input}
           />
         </div>
+        <div className={styles.checkboxContainer}>
+          <label>
+            <input
+              type="checkbox"
+              checked={showPassword}
+              onChange={() => setShowPassword(!showPassword)}
+            />
+            Show Password
+          </label>
+        </div>
         <div className={styles.inputGroup}>
           <label className={styles.label}>Select Role:</label>
           <div className={styles.radioGroup}>
@@ -153,16 +163,6 @@ export default function SignUp() {
             </label>
           </div>
         </div>
-        <div className={styles.checkboxContainer}>
-            <label>
-              <input
-                type="checkbox"
-                checked={showPassword}
-                onChange={() => setShowPassword(!showPassword)}
-              />
-              Show Password
-            </label>
-          </div>
         <button type="submit" className={styles.button}>
           Sign Up
         </button>

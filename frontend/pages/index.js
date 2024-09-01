@@ -19,8 +19,8 @@ export default function Home() {
         <img src="assets/logo.png"></img>
         </div>
         <div className={styles.auth}>
-          <a href="/login">log in</a>
-          <a href="/signup">sign up</a>
+          <Link href="/login">log in</Link>
+          <Link href="/signup">sign up</Link>
         </div>
       </header>
       <main>
