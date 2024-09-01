@@ -125,11 +125,11 @@ export default function Page() {
 
               <br>
               </br>
-              <div className='buttons-container'>
+              <Box display="flex" alignItems="center" gap="10px">
                 <Link href="/admin-home" className='dashboard-button'>
                   Go Back
                 </Link>
-              </div>
+              </Box>
             </div>
           </div>
         );
