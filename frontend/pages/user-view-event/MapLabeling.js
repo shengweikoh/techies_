@@ -84,7 +84,7 @@ const MapLabeling = ({ eventDocID, imgURL }) => {
         <ul style={{ listStyleType: 'none', padding: 0 }}>
           {markers.map((marker, index) => (
             <li key={index} style={{ marginBottom: '10px' }}>
-              <Box>
+              <div>
                 <Box display="flex" alignItems="center" gap="20px">
                   <h3>Label:</h3> 
                   <p>{marker.label}</p>
@@ -93,7 +93,7 @@ const MapLabeling = ({ eventDocID, imgURL }) => {
                   <h3>Wait Time:</h3> 
                   <p>{marker.waitTime} minutes</p>
                 </Box>
-              </Box>
+              </div>
             </li>
           ))}
         </ul>
