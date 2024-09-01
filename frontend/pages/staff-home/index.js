@@ -104,7 +104,7 @@ export default function Page() {
                 <EventIcon fontSize="large"/>
                 <h2>My Events</h2>
               </Box>
-              <p>View the details of events</p>
+              <p>View events that you are involved in</p>
               <div className="dashboard-cards">
                 {renderEvents()}
               </div>

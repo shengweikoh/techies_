@@ -224,6 +224,7 @@ const Dashboard = () => {
           <BookmarkBorderIcon fontSize="large"/>
           <h2>Saved Events</h2>
         </Box>
+        <p>View your saved events</p>
         <div className="dashboard-cards">
           {renderSavedEvents()}
         </div>

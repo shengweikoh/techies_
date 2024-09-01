@@ -104,18 +104,18 @@ export default function Page() {
                 <EventIcon fontSize="large"/>
                 <h2>My Events</h2>
               </Box>
-              <p>View the details of events</p>
+              <p>View the details of your events</p>
               <div className="dashboard-cards">
                 {renderEvents()}
               </div>
 
               <Box display="flex" alignItems="center" gap="15px">
-                    <CreateIcon fontSize="large"/>
-                    <h2>Create an Event</h2>
-                </Box>
-                <p>Organise a new event</p>
-                <br></br>
-                <Link href="/admin-create-event" className="dashboard-button">Create Event</Link>
+                  <CreateIcon fontSize="large"/>
+                  <h2>Create an Event</h2>
+              </Box>
+              <p>Organise a new event</p>
+              <br></br>
+              <Link href="/admin-create-event" className="dashboard-button">Create Event</Link>
             </div>
           </div>
         );
