@@ -3,8 +3,7 @@ import { MapContainer, ImageOverlay, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import axios from 'axios';
-import Link from 'next/link';
-import { Box } from '@mui/material';
+import { Box, Snackbar, Alert } from '@mui/material';
 
 const createIcon = (color) => {
   return new L.DivIcon({
@@ -18,6 +17,7 @@ const MapLabeling = ({ eventDocID, imgURL }) => {
   const [markers, setMarkers] = useState([]);
   const [bounds, setBounds] = useState([]);
   const [error, setError] = useState(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   // Fetch markers from API
   const fetchMapMarkers = async () => {
@@ -73,6 +73,7 @@ const MapLabeling = ({ eventDocID, imgURL }) => {
         markers,
       });
       console.log('Markers successfully updated:', response.data);
+      setSnackbarOpen(true); // Show the snackbar when markers are successfully updated
     } catch (error) {
       console.error('Error updating markers:', error);
     }
@@ -145,7 +146,7 @@ const MapLabeling = ({ eventDocID, imgURL }) => {
                   }}
                   placeholder="Wait Time (minutes)"
                 />
-                <h3 style={{fontWeight:"normal"}}>minutes</h3>
+                <h3 style={{ fontWeight: "normal" }}>minutes</h3>
               </Box>
             </li>
           ))}
@@ -158,6 +159,17 @@ const MapLabeling = ({ eventDocID, imgURL }) => {
           Save
         </button>
       </div>
+
+      {/* Snackbar for success message */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+      >
+        <Alert onClose={() => setSnackbarOpen(false)} severity="success">
+          Updated Marker Details
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
