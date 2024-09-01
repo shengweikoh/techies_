@@ -75,6 +75,7 @@ const MapLabeling = ({ eventDocID, imgURL }) => {
 
   return (
     <div>
+      <p>Select a colour from below, then click on your desired point on the map to add a marker!</p>
       <div className="color-selector">
         <br />
         <button onClick={() => setSelectedColor('#1E90FF')} style={{ backgroundColor: '#1E90FF' }}></button>
