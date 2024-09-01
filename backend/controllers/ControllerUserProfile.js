@@ -15,7 +15,6 @@ const getUserProfile = async (req, res) => {
             Name: userDetails.Name,
             Phone: userDetails.Phone,
             EContact: userDetails.EContact,
-            Email: userDetails.Email,
             Blood: userDetails.BloodType,
             Medical: userDetails.MedicalConditions,
         });

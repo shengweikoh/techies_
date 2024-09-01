@@ -60,18 +60,19 @@ export default function SignUp() {
         Email: user.email,});
       console.log('User document created in Firestore');
   
-      // Step 6: Store the token and role in local storage
-      localStorage.setItem('userToken', token);
+      // Step 5: Store the token and document ID in local storage
+      localStorage.setItem('userDocID', user.uid); // Save the user ID as userDocID
+      localStorage.setItem('userToken', token); // Save the token as userToken
       localStorage.setItem('userRole', role);
-      console.log('Token stored in local storage');
-  
-      // Step 7: Redirect based on user role
+      console.log('Token and document ID stored in local storage');
+
+      // Step 6: Redirect based on user role
       if (role === 'User') {
-        router.push('/user-home');
-      } else if (role === 'Admin') { 
-        router.push('/admin-home');
+        router.push('/user-profile');
+      } else if (role === 'Admin') {
+        router.push('/admin-profile');
       } else if (role === 'Staff') {
-        router.push('/staff-home');
+        router.push('/staff-profile');
       } else {
         setError('Login failed: User role not found');
       }

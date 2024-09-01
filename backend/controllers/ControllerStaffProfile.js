@@ -14,25 +14,23 @@ const getStaffProfile = async (req, res) => {
         return res.status(200).json({
             staffName: staffDetails.Name,
             staffPhone: staffDetails.Phone,
-            staffEmail: staffDetails.Email,
             staffCompany: staffDetails.CompanyName
         });
     } catch (error) {
-        return res.status(500).json({code: 500, message: `Error getting staff: ${error} `})
+        return res.status(500).json({code: 500, message: `Error getting staff: ${error.message}`});
     }
 }
+
 const updateStaffProfile = async (req, res) => {
     const staffID = req.query.staffID;
     const { Name, Phone, CompanyName } = req.body;
 
-    if ( !Name || !Phone || CompanyName) {
-		return res
-			.status(400)
-			.json({
-				code: 400,
-				message:
-					"Staff updated name/phone/company name required",
-			});
+    // Correct the validation logic
+    if (!Name || !Phone || !CompanyName) {
+		return res.status(400).json({
+			code: 400,
+			message: "Staff updated name/phone/company name required",
+		});
 	}
     try {
         await db.collection("Staff").doc(staffID).update({
@@ -42,16 +40,17 @@ const updateStaffProfile = async (req, res) => {
         });
         return res.status(200).json({
             code: 200,
-            message: "User profile successfully updated.",
+            message: "Staff profile successfully updated.",
         });
     } catch (error) {
-        console.error("Error updating user profile:", error);
+        console.error("Error updating staff profile:", error);
         return res.status(500).json({
             code: 500,
-            message: `Error updating user profile: ${error.message}`,
+            message: `Error updating staff profile: ${error.message}`,
         });
     }
 }
+
 
 const getStaffEvent = async (req, res) => {
     const staffID = req.query.staffID;

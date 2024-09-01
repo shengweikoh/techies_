@@ -13,16 +13,18 @@ const getAdminProfile = async (req, res) => {
 
     try {
         const admin = await db.collection("Admin").doc(adminID).get();
+        if (!admin.exists) {
+            return res.status(404).json({ code: 404, message: "Admin not found." });
+        }
 
         const adminDetails = admin.data();
         return res.status(200).json({
             adminName: adminDetails.Name,
             adminPhone: adminDetails.Phone,
-            adminEmail: adminDetails.Email,
             adminIC: adminDetails.IC,
         });
     } catch (error) {
-        return res.status(500).json({code: 500, message: `Error getting admin: ${error} `})
+        return res.status(500).json({code: 500, message: `Error getting admin: ${error.message}`});
     }
 }
 
@@ -38,13 +40,10 @@ const updateAdminProfile = async (req, res) => {
     }
 
     if (!Name || !Phone || !IC) {
-		return res
-			.status(400)
-			.json({
-				code: 400,
-				message:
-					"User updated name/phone/IC required",
-			});
+		return res.status(400).json({
+			code: 400,
+			message: "Admin name, phone, and IC are required",
+		});
 	}
 
     try {
@@ -78,6 +77,7 @@ const updateAdminProfile = async (req, res) => {
         });
     }
 }
+
 
 const getAdminEvent = async (req, res) => {
     const adminID = req.query.adminID;
