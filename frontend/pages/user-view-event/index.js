@@ -107,6 +107,7 @@ export default function Page() {
     return (
       <div className="dashboard">
         <div className="dashboard-container">
+          <h2>{eventDetails.eventName}</h2>
           <Box display="flex" alignItems="center" gap="15px">
             <MapIcon fontSize="large" />
             <h2>Event Map</h2>
@@ -120,8 +121,6 @@ export default function Page() {
             <EventIcon fontSize="large" />
             <h2>Event Details</h2>
           </Box>
-
-          <h2>{eventDetails.eventName}</h2>
           <Box display="flex" alignItems="center" gap="10px">
             <CalendarMonthIcon />
             <p>{formattedStartDate} - {formattedEndDate}</p>
