@@ -75,6 +75,7 @@ const MapLabeling = ({ eventDocID, imgURL }) => {
         markers,
       });
       console.log('Markers successfully updated:', response.data);
+      alert('Markers successfully updated!');
     } catch (error) {
       console.error('Error updating markers:', error);
     }
@@ -136,28 +137,12 @@ const MapLabeling = ({ eventDocID, imgURL }) => {
       {/* List marker names and wait times */}
       <div style={{ marginTop: '20px' }}>
         <h3>Marker Details:</h3>
+        <p>Change the waiting time of markers</p>
         <ul style={{ listStyleType: 'none', padding: 0 }}>
           {markers.map((marker, index) => (
             <li key={index} style={{ marginBottom: '10px' }}>
               <Box display="flex" alignItems="center" gap="10px">
-                <h3>Label:</h3>
-                <input
-                  type="text"
-                  value={marker.label || ''}
-                  onChange={(e) => handleChange(index, 'label', e.target.value)}
-                  style={{
-                    fontSize: '16px',
-                    marginLeft: '10px',
-                    padding: '5px',
-                    border: '1px solid #ccc',
-                    borderRadius: '4px',
-                    width: '200px'
-                  }}
-                  placeholder="Marker Name"
-                />
-              </Box>
-              <br />
-              <Box display="flex" alignItems="center" gap="10px">
+                <h3>{marker.label} - </h3>
                 <h3>Wait Time:</h3>
                 <input
                   type="text"
@@ -180,7 +165,6 @@ const MapLabeling = ({ eventDocID, imgURL }) => {
         </ul>
       </div>
 
-      <br />
       <Box display="flex" alignItems="center" gap="10px">
         <button className='dashboard-button' onClick={handleAddStaffClick}>
           Add Staff
