@@ -68,7 +68,7 @@ export default function Page() {
       await axios.post(`http://localhost:8001/user/saveEvent?userID=${userDocID}`, {
         eventID: eventDocID
       });
-      router.push('/user-home'); // Redirect to user homepage after saving
+      alert('Event successfully saved!');
     } catch (error) {
       console.error('Error saving event:', error);
       setError(error.message);
