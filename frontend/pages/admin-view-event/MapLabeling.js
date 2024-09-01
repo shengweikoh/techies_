@@ -4,6 +4,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import axios from 'axios';
 import Link from 'next/link';
+import { Box } from '@mui/material';
 
 const createIcon = (color) => {
   return new L.DivIcon({
@@ -18,6 +19,7 @@ const MapLabeling = ({ eventDocID, imgURL }) => {
   const [bounds, setBounds] = useState([]);
   const [error, setError] = useState(null);
 
+  // Fetch markers from API
   const fetchMapMarkers = async () => {
     try {
       if (!eventDocID) {
@@ -33,28 +35,47 @@ const MapLabeling = ({ eventDocID, imgURL }) => {
 
   useEffect(() => {
     fetchMapMarkers();
-  }, []);
+  }, [eventDocID]);
 
+  // Set image bounds
   useEffect(() => {
-    const img = new Image();
-    img.src = imgURL;
-    img.onload = () => {
-      const imageWidth = img.width;
-      const imageHeight = img.height;
+    if (imgURL) {
+      const img = new Image();
+      img.src = imgURL;
+      img.onload = () => {
+        const imageWidth = img.width;
+        const imageHeight = img.height;
 
-      const swLat = 51.49; // South-West Latitude
-      const swLng = -0.08; // South-West Longitude
-      const neLat = swLat + (imageHeight / 10000); // North-East Latitude
-      const neLng = swLng + (imageWidth / 10000);  // North-East Longitude
-      
-      setBounds([[swLat, swLng], [neLat, neLng]]);
-    };
+        const swLat = 51.49; // South-West Latitude
+        const swLng = -0.08; // South-West Longitude
+        const neLat = swLat + (imageHeight / 10000); // North-East Latitude
+        const neLng = swLng + (imageWidth / 10000);  // North-East Longitude
+
+        setBounds([[swLat, swLng], [neLat, neLng]]);
+      };
+    }
   }, [imgURL]);
 
+  // Handle marker field changes
   const handleChange = (index, field, value) => {
     const updatedMarkers = [...markers];
     updatedMarkers[index] = { ...updatedMarkers[index], [field]: value };
     setMarkers(updatedMarkers);
+  };
+
+  // Update markers on save button click
+  const updateMarkers = async () => {
+    try {
+      if (!eventDocID) {
+        throw new Error('Event document ID not found');
+      }
+      const response = await axios.post(`http://localhost:8001/markers/wait?eventID=${eventDocID}`, {
+        markers,
+      });
+      console.log('Markers successfully updated:', response.data);
+    } catch (error) {
+      console.error('Error updating markers:', error);
+    }
   };
 
   return (
@@ -67,7 +88,6 @@ const MapLabeling = ({ eventDocID, imgURL }) => {
           />
         )}
         {markers.map((marker, index) => {
-          // Check if marker.position is valid
           if (marker.position && marker.position.lat !== undefined && marker.position.lng !== undefined) {
             return (
               <Marker 
@@ -75,12 +95,12 @@ const MapLabeling = ({ eventDocID, imgURL }) => {
                 position={marker.position} 
                 icon={createIcon(marker.color)}
               >
-                <Popup>{marker.label}</Popup>
+                <Popup>{`${marker.label}, ${marker.waitTime} minutes`}</Popup>
               </Marker>
             );
           } else {
             console.error('Invalid marker position:', marker.position);
-            return null; // Skip rendering if the position is invalid
+            return null;
           }
         })}
       </MapContainer>
@@ -91,8 +111,8 @@ const MapLabeling = ({ eventDocID, imgURL }) => {
         <ul style={{ listStyleType: 'none', padding: 0 }}>
           {markers.map((marker, index) => (
             <li key={index} style={{ marginBottom: '10px' }}>
-              <label>
-                <strong>Name:</strong>
+              <Box display="flex" alignItems="center" gap="20px">
+                <h3>Label:</h3>
                 <input
                   type="text"
                   value={marker.label || ''}
@@ -107,10 +127,10 @@ const MapLabeling = ({ eventDocID, imgURL }) => {
                   }}
                   placeholder="Marker Name"
                 />
-              </label>
+              </Box>
               <br />
-              <label>
-                <strong>Wait Time:</strong>
+              <Box display="flex" alignItems="center" gap="20px">
+                <h3>Wait Time:</h3>
                 <input
                   type="text"
                   value={marker.waitTime || ''}
@@ -125,7 +145,7 @@ const MapLabeling = ({ eventDocID, imgURL }) => {
                   }}
                   placeholder="Wait Time (minutes)"
                 />
-              </label>
+              </Box>
             </li>
           ))}
         </ul>
@@ -133,9 +153,9 @@ const MapLabeling = ({ eventDocID, imgURL }) => {
       
       <br />
       <div className='buttons-container'>
-        <Link href="/admin-home" className='dashboard-button'>
+        <button onClick={() => { updateMarkers() }} className='dashboard-button'>
           Save
-        </Link>
+        </button>
       </div>
     </div>
   );

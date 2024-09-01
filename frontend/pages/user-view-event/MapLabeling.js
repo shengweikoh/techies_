@@ -3,8 +3,9 @@ import { MapContainer, ImageOverlay, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import axios from 'axios';
-import Link from 'next/link';
+import { Box } from '@mui/material';
 
+// Create icon with the specified color
 const createIcon = (color) => {
   return new L.DivIcon({
     className: 'color-circle-icon',
@@ -56,12 +57,11 @@ const MapLabeling = ({ eventDocID, imgURL }) => {
       <MapContainer center={[51.50, -0.07]} zoom={13} style={{ height: "600px", width: "100%" }}>
         {bounds.length > 0 && imgURL && (
           <ImageOverlay
-            url={imgURL} // Use the dynamic image URL here
+            url={imgURL}
             bounds={bounds}
           />
         )}
         {markers.map((marker, index) => {
-          // Check if marker.position is valid
           if (marker.position && marker.position.lat !== undefined && marker.position.lng !== undefined) {
             return (
               <Marker 
@@ -69,34 +69,35 @@ const MapLabeling = ({ eventDocID, imgURL }) => {
                 position={marker.position} 
                 icon={createIcon(marker.color)}
               >
-                <Popup>{marker.label}</Popup>
+                <Popup>{`${marker.label}, ${marker.waitTime} minutes`}</Popup>
               </Marker>
             );
           } else {
             console.error('Invalid marker position:', marker.position);
-            return null; // Skip rendering if the position is invalid
+            return null;
           }
         })}
       </MapContainer> 
       
-      {/* List marker names and wait times */}
       <div style={{ marginTop: '20px' }}>
-        <h3>Marker Details:</h3>
+        <h2>Marker Details:</h2>
         <ul style={{ listStyleType: 'none', padding: 0 }}>
           {markers.map((marker, index) => (
             <li key={index} style={{ marginBottom: '10px' }}>
-              <div>
-                <strong>Name:</strong> {marker.label}
-              </div>
-              <div>
-                <strong>Wait Time:</strong> {marker.waitTime} minutes
-              </div>
+              <Box>
+                <Box display="flex" alignItems="center" gap="20px">
+                  <h3>Label:</h3> 
+                  <p>{marker.label}</p>
+                </Box>
+                <Box display="flex" alignItems="center" gap="20px">
+                  <h3>Wait Time:</h3> 
+                  <p>{marker.waitTime} minutes</p>
+                </Box>
+              </Box>
             </li>
           ))}
         </ul>
       </div>
-      
-      <br />
     </div>
   );
 };

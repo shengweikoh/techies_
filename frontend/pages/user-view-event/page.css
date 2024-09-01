@@ -4,6 +4,10 @@ body {
     font-family: monospace;
   }
 
+h3 {
+    font-size: 32px;
+}
+
 .dashboard {
     background-color: rgba(255, 255, 255, 0.654);
     border: 2px solid #555353;
@@ -80,3 +84,12 @@ background-color: #333;
     flex-direction: column;
     }
 }
+
+.color-circle-icon .color-circle {
+    background-color: #1E90FF; /* Default color */
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #fff; /* Optional: add a white border for better visibility */
+  }
+  
