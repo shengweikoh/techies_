@@ -21,6 +21,7 @@ export default function Page() {
         const [price, setPrice] = useState("");
         const [ageLimit, setAgeLimit] = useState("");
         const [capacity, setCapacity] = useState("");
+        const [userProfile, setUserProfile] = useState(null);
     
         const handleEventNameChange = (event) => setEventName(event.target.value);
         const handleOrganiserNameChange = (event) => setOrganiserName(event.target.value);
@@ -35,6 +36,24 @@ export default function Page() {
         const handleAgeLimitChange = (event) => setAgeLimit(event.target.value);
         const handleCapacityChange = (event) => setCapacity(event.target.value);
 
+        const userDocID = localStorage.getItem('userDocID');
+    
+        const fetchUserProfile = async () => {
+            try {
+              // Replace with the correct endpoint and parameters
+              const response = await axios.get(`http://localhost:8001/admin/profile?adminID=${userDocID}`);
+              
+              console.log('User Profile:', response.data);
+              setUserProfile(response.data);
+            } catch (error) {
+              console.error('Error fetching user profile:', error);
+              return null;
+            }
+          };
+
+        useEffect(() => {
+            fetchUserProfile();
+        }, []);
 
   const createEvent = async (event) => {
     event.preventDefault();
@@ -64,7 +83,6 @@ export default function Page() {
         return formattedDate;
     };
 
-    const userDocID = localStorage.getItem('userDocID');
 
     const eventData = {
         Name: eventName,
@@ -142,6 +160,7 @@ export default function Page() {
                         required
                         className='large-input'
                         onChange={handleOrganiserNameChange}
+                        value={userProfile?.adminName}
                     />
                     </div>
                     <div className='form-item'>
@@ -151,6 +170,7 @@ export default function Page() {
                         required
                         className='large-input'
                         onChange={handleOrganiserContactChange}
+                        value={userProfile?.adminPhone}
                         />
                     </div>
                 </div>
