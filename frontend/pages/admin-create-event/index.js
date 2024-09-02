@@ -177,7 +177,7 @@ export default function Page() {
                 </div>
                 <div className='form-container'>
                     <div className='form-item'>
-                    <h3>Location</h3>``
+                    <h3>Location</h3>
                     <input 
                         type="text"
                         required
