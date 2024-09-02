@@ -21,7 +21,6 @@ export default function Page() {
         const [price, setPrice] = useState("");
         const [ageLimit, setAgeLimit] = useState("");
         const [capacity, setCapacity] = useState("");
-        const [userProfile, setUserProfile] = useState(null);
     
         const handleEventNameChange = (event) => setEventName(event.target.value);
         const handleOrganiserNameChange = (event) => setOrganiserName(event.target.value);
@@ -44,7 +43,9 @@ export default function Page() {
               const response = await axios.get(`http://localhost:8001/admin/profile?adminID=${userDocID}`);
               
               console.log('User Profile:', response.data);
-              setUserProfile(response.data);
+              setOrganiserName(response.data.adminName);
+              setOrganiserContact(response.data.adminPhone);
+            
             } catch (error) {
               console.error('Error fetching user profile:', error);
               return null;
@@ -160,7 +161,7 @@ export default function Page() {
                         required
                         className='large-input'
                         onChange={handleOrganiserNameChange}
-                        value={userProfile?.adminName}
+                        value={organiserName}
                     />
                     </div>
                     <div className='form-item'>
@@ -170,13 +171,13 @@ export default function Page() {
                         required
                         className='large-input'
                         onChange={handleOrganiserContactChange}
-                        value={userProfile?.adminPhone}
+                        value={organiserContact}
                         />
                     </div>
                 </div>
                 <div className='form-container'>
                     <div className='form-item'>
-                    <h3>Location</h3>
+                    <h3>Location</h3>``
                     <input 
                         type="text"
                         required
