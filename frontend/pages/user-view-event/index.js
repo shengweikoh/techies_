@@ -8,6 +8,11 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import GroupsIcon from '@mui/icons-material/Groups';
+import FamilyRestroomIcon from '@mui/icons-material/FamilyRestroom';
+import DescriptionIcon from '@mui/icons-material/Description';
+import CorporateFareIcon from '@mui/icons-material/CorporateFare';
+import CallIcon from '@mui/icons-material/Call';
 import { Box } from "@mui/material";
 import { useRouter } from 'next/router';
 import axios from "axios";
@@ -122,21 +127,41 @@ export default function Page() {
             <h2>Event Details</h2>
           </Box>
           <Box display="flex" alignItems="center" gap="10px">
-            <CalendarMonthIcon />
-            <p>{formattedStartDate} - {formattedEndDate}</p>
-          </Box>
-          <Box display="flex" alignItems="center" gap="10px">
-            <AccessTimeIcon />
-            <p>{formattedStartTime} - {formattedEndTime}</p>
-          </Box>
-          <Box display="flex" alignItems="center" gap="10px">
-            <LocationOnIcon />
-            <p>{eventDetails.eventLocation}</p>
-          </Box>
-          <Box display="flex" alignItems="center" gap="10px">
-            <AttachMoneyIcon />
-            <p>{eventDetails.eventPrice}</p>
-          </Box>
+                <DescriptionIcon />
+                <p>{eventDetails.eventDescription}</p>
+              </Box>
+              <Box display="flex" alignItems="center" gap="10px">
+                <CalendarMonthIcon />
+                <p>{formattedStartDate} - {formattedEndDate}</p>
+              </Box>
+              <Box display="flex" alignItems="center" gap="10px">
+                <AccessTimeIcon />
+                <p>{formattedStartTime} - {formattedEndTime}</p>
+              </Box>
+              <Box display="flex" alignItems="center" gap="10px">
+                <LocationOnIcon />
+                <p>{eventDetails.eventLocation}</p>
+              </Box>
+              <Box display="flex" alignItems="center" gap="10px">
+                <AttachMoneyIcon />
+                <p>{eventDetails.eventPrice}</p>
+              </Box>
+              <Box display="flex" alignItems="center" gap="10px">
+                <GroupsIcon />
+                <p>{eventDetails.eventCapacity}</p>
+              </Box>
+              <Box display="flex" alignItems="center" gap="10px">
+                <FamilyRestroomIcon />
+                <p>{eventDetails.eventAgeLimit || "0"} years and above</p>
+              </Box>
+              <Box display="flex" alignItems="center" gap="10px">
+                <CorporateFareIcon />
+                <p>{eventDetails.eventOrganiser}</p>
+              </Box>
+              <Box display="flex" alignItems="center" gap="10px">
+                <CallIcon />
+                <p>{eventDetails.eventOrganiserContact}</p>
+              </Box>
 
           <br />
           <Box display="flex" alignItems="center" gap="10px">
