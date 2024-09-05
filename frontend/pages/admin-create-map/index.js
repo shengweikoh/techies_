@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import './page.css';
 import ResponsiveAppBar from '../../components/admin-navbar/navbar';
 import { Box } from "@mui/material";
@@ -11,28 +10,28 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 
-// Dynamically import the MapLabeling component with ssr: false
+// Dynamically import the MapLabeling component with SSR disabled
 const MapLabeling = dynamic(() => import('./MapLabeling'), { ssr: false });
 
 export default function Page() {
     const router = useRouter();
-    const { eventDocID } = router.query;
-  
+    const { eventDocID } = router.query; // Retrieve eventDocID from router query
+
     const Dashboard = () => {
         const [isPictureVisible, setIsPictureVisible] = useState(false);
         const [profilePic, setProfilePic] = useState("");
         const [selectedFile, setSelectedFile] = useState(null);
-        const [isMapLabelingVisible, setIsMapLabelingVisible] = useState(false); // New state for MapLabeling visibility
+        const [isMapLabelingVisible, setIsMapLabelingVisible] = useState(false); // State to control MapLabeling visibility
         const [mapURL, setMapURL] = useState("");
 
         const togglePicture = () => {
             setIsPictureVisible(!isPictureVisible);
-        }
+        };
 
         const handleFileChange = (event) => {
             setSelectedFile(event.target.files[0]);
         };
-    
+
         const handleUploadPicture = async () => {
             if (!selectedFile) {
                 alert("Please select a file first");
@@ -45,14 +44,15 @@ export default function Page() {
                 alert("Image Uploaded");
 
                 const downloadURL = await getDownloadURL(imageRef);
-                setMapURL(downloadURL);
+                setMapURL(downloadURL); // Update state with the image URL
 
+                setProfilePic(downloadURL);
 
                 const profilePicURLS = {
                     oldImageURL: profilePic,
                     newImageURL: downloadURL,
                     eventID: eventDocID
-                }
+                };
 
                 console.log("File available at", profilePicURLS);
 
@@ -63,6 +63,8 @@ export default function Page() {
                         },
                     });
                     console.log('Picture uploaded:', response.data);
+
+                    // After uploading, show the MapLabeling component
                     setTimeout(() => {
                         setIsPictureVisible(false);
                         setIsMapLabelingVisible(true); // Show MapLabeling after successful upload
@@ -74,7 +76,7 @@ export default function Page() {
                 console.error("Error uploading image: ", error);
                 alert("Error uploading image");
             }
-        }
+        };
 
         return (
             <div className="dashboard">
@@ -86,8 +88,10 @@ export default function Page() {
                     <p>Upload an image of your event map</p>
                     <button className='dashboard-button' onClick={togglePicture}>Add Map</button>
 
-                    {/* Only show MapLabeling after the image is uploaded */}
-                    {isMapLabelingVisible && <MapLabeling eventDocID={eventDocID} imgURL={mapURL} />}
+                    {/* Conditionally render MapLabeling component */}
+                    {isMapLabelingVisible && eventDocID && mapURL && (
+                        <MapLabeling eventDocID={eventDocID} imgURL={mapURL} />
+                    )}
 
                     <div id="pictureOverlay" className={`picture-overlay ${isPictureVisible ? 'show' : ''}`}>
                         <div className='picture-box'>
@@ -116,5 +120,5 @@ export default function Page() {
             <ResponsiveAppBar />
             <Dashboard />
         </main>
-    )
+    );
 }

@@ -18,14 +18,13 @@ import { useRouter } from 'next/router';
 import axios from "axios";
 import dynamic from 'next/dynamic';
 
-
+// Dynamic import for MapLabeling
 const MapLabeling = dynamic(() => import('./MapLabeling'), { ssr: false });
 
 export default function Page() {
   const [mapURL, setMapURL] = useState("");
   const [eventDetails, setEventDetails] = useState(null);
   const [error, setError] = useState(null);
-
 
   const router = useRouter();
   const { eventDocID } = router.query;
@@ -45,126 +44,123 @@ export default function Page() {
   };
 
   const fetchEventDetails = async () => {
-      try {
-        if (!eventDocID) {
-          throw new Error('Event document ID not found in localStorage');
-        }
-        const response = await axios.get(`http://localhost:8001/event/detail?eventID=${eventDocID}`);
-        setEventDetails(response.data);
-        console.log(response.data);
-
+    try {
+      if (!eventDocID) {
+        throw new Error('Event document ID not found in localStorage');
+      }
+      const response = await axios.get(`http://localhost:8001/event/detail?eventID=${eventDocID}`);
+      setEventDetails(response.data);
+      console.log(response.data);
     } catch (err) {
-        console.error(`Error fetching eventID ${eventDocID}:`, err);
-        return null;
+      console.error(`Error fetching eventID ${eventDocID}:`, err);
+      return null;
     }
   };
 
   useEffect(() => {
     fetchMapURL();
     fetchEventDetails();
-  }, []);
+  }, [eventDocID]);
 
-    const Dashboard = () => {
-      if (!eventDetails) {
-        return <div>Loading event details...</div>;
-      }
-      const startDateTime = new Date(eventDetails.startDateTime);
-      const endDateTime = new Date(eventDetails.endDateTime);
+  const Dashboard = () => {
+    if (!eventDetails) {
+      return <div>Loading event details...</div>;
+    }
 
-      const formattedStartDate = startDateTime.toLocaleString('en-GB', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
+    const startDateTime = new Date(eventDetails.startDateTime);
+    const endDateTime = new Date(eventDetails.endDateTime);
 
-      const formattedEndDate = endDateTime.toLocaleString('en-GB', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
+    const formattedStartDate = startDateTime.toLocaleString('en-GB', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
 
-      const formattedStartTime = startDateTime.toLocaleString('en-GB', {
-        hour: '2-digit',
-        minute: '2-digit'
-      });
+    const formattedEndDate = endDateTime.toLocaleString('en-GB', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
 
-      const formattedEndTime = endDateTime.toLocaleString('en-GB', {
-        hour: '2-digit',
-        minute: '2-digit'
-      });
+    const formattedStartTime = startDateTime.toLocaleString('en-GB', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
 
-
-        return (
-          <div className="dashboard">
-            <div className="dashboard-container">
-              <h2>{eventDetails.eventName}</h2>
-              <Box display="flex" alignItems="center" gap="15px">
-                <MapIcon fontSize="large" />
-                <h2>Event Map</h2>
-              </Box>
-              <MapLabeling eventDocID={eventDocID} imgURL={mapURL} />
-              <br></br>
-              <br></br>
-              <Box display="flex" alignItems="center" gap="15px">
-                <EventIcon fontSize="large"/>
-                <h2>Event Details</h2>
-              </Box>
-          
-
-              <Box display="flex" alignItems="center" gap="10px">
-                <DescriptionIcon />
-                <p>{eventDetails.eventDescription}</p>
-              </Box>
-              <Box display="flex" alignItems="center" gap="10px">
-                <CalendarMonthIcon />
-                <p>{formattedStartDate} - {formattedEndDate}</p>
-              </Box>
-              <Box display="flex" alignItems="center" gap="10px">
-                <AccessTimeIcon />
-                <p>{formattedStartTime} - {formattedEndTime}</p>
-              </Box>
-              <Box display="flex" alignItems="center" gap="10px">
-                <LocationOnIcon />
-                <p>{eventDetails.eventLocation}</p>
-              </Box>
-              <Box display="flex" alignItems="center" gap="10px">
-                <AttachMoneyIcon />
-                <p>{eventDetails.eventPrice}</p>
-              </Box>
-              <Box display="flex" alignItems="center" gap="10px">
-                <GroupsIcon />
-                <p>{eventDetails.eventCapacity}</p>
-              </Box>
-              <Box display="flex" alignItems="center" gap="10px">
-                <FamilyRestroomIcon />
-                <p>{eventDetails.eventAgeLimit || "0"} years and above</p>
-              </Box>
-              <Box display="flex" alignItems="center" gap="10px">
-                <CorporateFareIcon />
-                <p>{eventDetails.eventOrganiser}</p>
-              </Box>
-              <Box display="flex" alignItems="center" gap="10px">
-                <CallIcon />
-                <p>{eventDetails.eventOrganiserContact}</p>
-              </Box>
-
-
-              <br>
-              </br>
-              <Box display="flex" alignItems="center" gap="10px">
-                <Link href="/admin-home" className='dashboard-button'>
-                  Go Back
-                </Link>
-              </Box>
-            </div>
-          </div>
-        );
-      };
+    const formattedEndTime = endDateTime.toLocaleString('en-GB', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
 
     return (
-        <main>
-            <ResponsiveAppBar />
-            <Dashboard />
-        </main>
-    )
+      <div className="dashboard">
+        <div className="dashboard-container">
+          <h2>{eventDetails.eventName}</h2>
+          <Box display="flex" alignItems="center" gap="15px">
+            <MapIcon fontSize="large" />
+            <h2>Event Map</h2>
+          </Box>
+          <MapLabeling eventDocID={eventDocID} imgURL={mapURL} />
+          <br></br>
+          <br></br>
+          <Box display="flex" alignItems="center" gap="15px">
+            <EventIcon fontSize="large"/>
+            <h2>Event Details</h2>
+          </Box>
+
+          <Box display="flex" alignItems="center" gap="10px">
+            <DescriptionIcon />
+            <p>{eventDetails.eventDescription}</p>
+          </Box>
+          <Box display="flex" alignItems="center" gap="10px">
+            <CalendarMonthIcon />
+            <p>{formattedStartDate} - {formattedEndDate}</p>
+          </Box>
+          <Box display="flex" alignItems="center" gap="10px">
+            <AccessTimeIcon />
+            <p>{formattedStartTime} - {formattedEndTime}</p>
+          </Box>
+          <Box display="flex" alignItems="center" gap="10px">
+            <LocationOnIcon />
+            <p>{eventDetails.eventLocation}</p>
+          </Box>
+          <Box display="flex" alignItems="center" gap="10px">
+            <AttachMoneyIcon />
+            <p>{eventDetails.eventPrice}</p>
+          </Box>
+          <Box display="flex" alignItems="center" gap="10px">
+            <GroupsIcon />
+            <p>{eventDetails.eventCapacity}</p>
+          </Box>
+          <Box display="flex" alignItems="center" gap="10px">
+            <FamilyRestroomIcon />
+            <p>{eventDetails.eventAgeLimit || "0"} years and above</p>
+          </Box>
+          <Box display="flex" alignItems="center" gap="10px">
+            <CorporateFareIcon />
+            <p>{eventDetails.eventOrganiser}</p>
+          </Box>
+          <Box display="flex" alignItems="center" gap="10px">
+            <CallIcon />
+            <p>{eventDetails.eventOrganiserContact}</p>
+          </Box>
+
+          <br>
+          </br>
+          <Box display="flex" alignItems="center" gap="10px">
+            <Link href="/admin-home" className='dashboard-button'>
+              Go Back
+            </Link>
+          </Box>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <main>
+      <ResponsiveAppBar />
+      <Dashboard />
+    </main>
+  );
 }

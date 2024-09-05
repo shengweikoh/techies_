@@ -1,17 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { MapContainer, ImageOverlay, Marker, Popup } from 'react-leaflet';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-import axios from 'axios';
+import dynamic from 'next/dynamic';
 import { Box, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button } from '@mui/material';
 import Link from 'next/link';
 
+// Import dynamically with no SSR
+const MapContainer = dynamic(() => import('react-leaflet').then((mod) => mod.MapContainer), { ssr: false });
+const ImageOverlay = dynamic(() => import('react-leaflet').then((mod) => mod.ImageOverlay), { ssr: false });
+const Marker = dynamic(() => import('react-leaflet').then((mod) => mod.Marker), { ssr: false });
+const Popup = dynamic(() => import('react-leaflet').then((mod) => mod.Popup), { ssr: false });
+
+import 'leaflet/dist/leaflet.css';
+
+const L = typeof window !== 'undefined' ? require('leaflet') : null;
+
 const createIcon = (color) => {
-  return new L.DivIcon({
+  return L ? new L.DivIcon({
     className: 'color-circle-icon',
     html: `<div class="color-circle" style="background-color: ${color};"></div>`,
     iconSize: [20, 20],
-  });
+  }) : null;
 };
 
 const MapLabeling = ({ eventDocID, imgURL }) => {
@@ -21,51 +28,49 @@ const MapLabeling = ({ eventDocID, imgURL }) => {
   const [openPopup, setOpenPopup] = useState(false);
   const [email, setEmail] = useState('');
 
-  // Fetch markers from API
-  const fetchMapMarkers = async () => {
-    try {
-      if (!eventDocID) {
-        throw new Error('Event document ID not found');
-      }
-      const response = await axios.get(`http://localhost:8001/markers/marker?eventID=${eventDocID}`);
-      console.log('API Response:', response.data);
-      setMarkers(response.data.markers);
-    } catch (error) {
-      setError(error.message);
-    }
-  };
-
   useEffect(() => {
-    fetchMapMarkers();
+    if (typeof window !== 'undefined') {
+      const fetchMapMarkers = async () => {
+        try {
+          if (!eventDocID) {
+            throw new Error('Event document ID not found');
+          }
+          const response = await axios.get(`http://localhost:8001/markers/marker?eventID=${eventDocID}`);
+          console.log('API Response:', response.data);
+          setMarkers(response.data.markers);
+        } catch (error) {
+          setError(error.message);
+        }
+      };
+
+      fetchMapMarkers();
+    }
   }, [eventDocID]);
 
-  // Set image bounds
   useEffect(() => {
-    if (imgURL) {
+    if (imgURL && typeof window !== 'undefined') {
       const img = new Image();
       img.src = imgURL;
       img.onload = () => {
         const imageWidth = img.width;
         const imageHeight = img.height;
 
-        const swLat = 51.49; // South-West Latitude
-        const swLng = -0.08; // South-West Longitude
-        const neLat = swLat + (imageHeight / 10000); // North-East Latitude
-        const neLng = swLng + (imageWidth / 10000);  // North-East Longitude
+        const swLat = 51.49;
+        const swLng = -0.08;
+        const neLat = swLat + (imageHeight / 10000);
+        const neLng = swLng + (imageWidth / 10000);
 
         setBounds([[swLat, swLng], [neLat, neLng]]);
       };
     }
   }, [imgURL]);
 
-  // Handle marker field changes
   const handleChange = (index, field, value) => {
     const updatedMarkers = [...markers];
     updatedMarkers[index] = { ...updatedMarkers[index], [field]: value };
     setMarkers(updatedMarkers);
   };
 
-  // Update markers on save button click
   const updateMarkers = async () => {
     try {
       if (!eventDocID) {
@@ -81,12 +86,10 @@ const MapLabeling = ({ eventDocID, imgURL }) => {
     }
   };
 
-  // Handle Add Staff button click
   const handleAddStaffClick = () => {
     setOpenPopup(true);
   };
 
-  // Handle API call to add staff
   const handleAddStaff = async () => {
     const userDocID = localStorage.getItem('userDocID');
     if (!userDocID) {
@@ -109,30 +112,32 @@ const MapLabeling = ({ eventDocID, imgURL }) => {
 
   return (
     <div>
-      <MapContainer center={[51.50, -0.07]} zoom={13} style={{ height: "600px", width: "100%" }}>
-        {bounds.length > 0 && imgURL && (
-          <ImageOverlay
-            url={imgURL}
-            bounds={bounds}
-          />
-        )}
-        {markers.map((marker, index) => {
-          if (marker.position && marker.position.lat !== undefined && marker.position.lng !== undefined) {
-            return (
-              <Marker
-                key={index}
-                position={marker.position}
-                icon={createIcon(marker.color)}
-              >
-                <Popup>{`${marker.label}, ${marker.waitTime} minutes`}</Popup>
-              </Marker>
-            );
-          } else {
-            console.error('Invalid marker position:', marker.position);
-            return null;
-          }
-        })}
-      </MapContainer>
+      {typeof window !== 'undefined' && (
+        <MapContainer center={[51.50, -0.07]} zoom={13} style={{ height: "600px", width: "100%" }}>
+          {bounds.length > 0 && imgURL && (
+            <ImageOverlay
+              url={imgURL}
+              bounds={bounds}
+            />
+          )}
+          {markers.map((marker, index) => {
+            if (marker.position && marker.position.lat !== undefined && marker.position.lng !== undefined) {
+              return (
+                <Marker
+                  key={index}
+                  position={marker.position}
+                  icon={createIcon(marker.color)}
+                >
+                  <Popup>{`${marker.label}, ${marker.waitTime} minutes`}</Popup>
+                </Marker>
+              );
+            } else {
+              console.error('Invalid marker position:', marker.position);
+              return null;
+            }
+          })}
+        </MapContainer>
+      )}
 
       {/* List marker names and wait times */}
       <div style={{ marginTop: '20px' }}>

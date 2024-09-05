@@ -1,101 +1,186 @@
+import ResponsiveAppBar from "../../components/user-navbar/navbar";
 import React, { useState, useEffect } from 'react';
-import { MapContainer, ImageOverlay, Marker, Popup } from 'react-leaflet';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-import axios from 'axios';
-import { Box } from '@mui/material';
+import './page.css';
+import Link from "next/link";
+import EventIcon from '@mui/icons-material/Event';
+import MapIcon from '@mui/icons-material/Map';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import GroupsIcon from '@mui/icons-material/Groups';
+import FamilyRestroomIcon from '@mui/icons-material/FamilyRestroom';
+import DescriptionIcon from '@mui/icons-material/Description';
+import CorporateFareIcon from '@mui/icons-material/CorporateFare';
+import CallIcon from '@mui/icons-material/Call';
+import { Box } from "@mui/material";
+import { useRouter } from 'next/router';
+import axios from "axios";
+import dynamic from 'next/dynamic';
 
-// Create icon with the specified color
-const createIcon = (color) => {
-  return new L.DivIcon({
-    className: 'color-circle-icon',
-    html: `<div class="color-circle" style="background-color: ${color};"></div>`,
-    iconSize: [20, 20],
-  });
-};
+// Dynamically import MapLabeling component with no SSR
+const MapLabeling = dynamic(() => import('./MapLabeling'), { ssr: false });
 
-const MapLabeling = ({ eventDocID, imgURL }) => {
-  const [markers, setMarkers] = useState([]);
-  const [bounds, setBounds] = useState([]);
+export default function Page() {
+  const [mapURL, setMapURL] = useState("");
+  const [eventDetails, setEventDetails] = useState(null);
   const [error, setError] = useState(null);
+  const [isMapURLLoaded, setIsMapURLLoaded] = useState(false);
 
-  const fetchMapMarkers = async () => {
+  const router = useRouter();
+  const { eventDocID } = router.query;
+  console.log("EVENT ID ", eventDocID);
+
+  const fetchMapURL = async () => {
     try {
       if (!eventDocID) {
         throw new Error('Event document ID not found');
       }
-      const response = await axios.get(`http://localhost:8001/markers/marker?eventID=${eventDocID}`);
-      console.log('API Response:', response.data);
-      setMarkers(response.data.markers);
+      const response = await axios.get(`http://localhost:8001/map?id=${eventDocID}`);
+      console.log('API Response:', response.data.eventMapURL);
+      setMapURL(response.data.eventMapURL);
+      setIsMapURLLoaded(true);
     } catch (error) {
       setError(error.message);
     }
   };
 
-  useEffect(() => {
-    fetchMapMarkers();
-  }, []);
+  const fetchEventDetails = async () => {
+    try {
+      if (!eventDocID) {
+        throw new Error('Event document ID not found');
+      }
+      const response = await axios.get(`http://localhost:8001/event/detail?eventID=${eventDocID}`);
+      setEventDetails(response.data);
+      console.log(response.data);
+    } catch (err) {
+      console.error(`Error fetching eventID ${eventDocID}:`, err);
+      return null;
+    }
+  };
 
   useEffect(() => {
-    const img = new Image();
-    img.src = imgURL;
-    img.onload = () => {
-      const imageWidth = img.width;
-      const imageHeight = img.height;
+    fetchMapURL();
+    fetchEventDetails();
+  }, [eventDocID]);
 
-      const swLat = 51.49; // South-West Latitude
-      const swLng = -0.08; // South-West Longitude
-      const neLat = swLat + (imageHeight / 10000); // North-East Latitude
-      const neLng = swLng + (imageWidth / 10000);  // North-East Longitude
-      
-      setBounds([[swLat, swLng], [neLat, neLng]]);
-    };
-  }, [imgURL]);
+  const saveEvent = async () => {
+    try {
+      if (!eventDocID) {
+        throw new Error('Event document ID not found');
+      }
+      const userDocID = localStorage.getItem('userDocID');
+      await axios.post(`http://localhost:8001/user/saveEvent?userID=${userDocID}`, {
+        eventID: eventDocID
+      });
+      alert('Event successfully saved!');
+    } catch (error) {
+      console.error('Error saving event:', error);
+      setError(error.message);
+    }
+  };
+
+  const Dashboard = () => {
+    if (!eventDetails) {
+      return <div>Loading event details...</div>;
+    }
+    const startDateTime = new Date(eventDetails.startDateTime);
+    const endDateTime = new Date(eventDetails.endDateTime);
+
+    const formattedStartDate = startDateTime.toLocaleString('en-GB', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+
+    const formattedEndDate = endDateTime.toLocaleString('en-GB', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+
+    const formattedStartTime = startDateTime.toLocaleString('en-GB', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+
+    const formattedEndTime = endDateTime.toLocaleString('en-GB', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+
+    return (
+      <div className="dashboard">
+        <div className="dashboard-container">
+          <h2>{eventDetails.eventName}</h2>
+          <Box display="flex" alignItems="center" gap="15px">
+            <MapIcon fontSize="large" />
+            <h2>Event Map</h2>
+          </Box>
+          {isMapURLLoaded && (
+            <MapLabeling eventDocID={eventDocID} imgURL={mapURL} />
+          )}
+          <br />
+          <br />
+          <Box display="flex" alignItems="center" gap="15px">
+            <EventIcon fontSize="large" />
+            <h2>Event Details</h2>
+          </Box>
+          <Box display="flex" alignItems="center" gap="10px">
+            <DescriptionIcon />
+            <p>{eventDetails.eventDescription}</p>
+          </Box>
+          <Box display="flex" alignItems="center" gap="10px">
+            <CalendarMonthIcon />
+            <p>{formattedStartDate} - {formattedEndDate}</p>
+          </Box>
+          <Box display="flex" alignItems="center" gap="10px">
+            <AccessTimeIcon />
+            <p>{formattedStartTime} - {formattedEndTime}</p>
+          </Box>
+          <Box display="flex" alignItems="center" gap="10px">
+            <LocationOnIcon />
+            <p>{eventDetails.eventLocation}</p>
+          </Box>
+          <Box display="flex" alignItems="center" gap="10px">
+            <AttachMoneyIcon />
+            <p>{eventDetails.eventPrice}</p>
+          </Box>
+          <Box display="flex" alignItems="center" gap="10px">
+            <GroupsIcon />
+            <p>{eventDetails.eventCapacity}</p>
+          </Box>
+          <Box display="flex" alignItems="center" gap="10px">
+            <FamilyRestroomIcon />
+            <p>{eventDetails.eventAgeLimit || "0"} years and above</p>
+          </Box>
+          <Box display="flex" alignItems="center" gap="10px">
+            <CorporateFareIcon />
+            <p>{eventDetails.eventOrganiser}</p>
+          </Box>
+          <Box display="flex" alignItems="center" gap="10px">
+            <CallIcon />
+            <p>{eventDetails.eventOrganiserContact}</p>
+          </Box>
+
+          <br />
+          <Box display="flex" alignItems="center" gap="10px">
+            <button onClick={saveEvent} className='dashboard-button'>
+              Save Event
+            </button>
+            <Link href="/user-home" className='dashboard-button'>
+              Go Back
+            </Link>
+          </Box>
+        </div>
+      </div>
+    );
+  };
 
   return (
-    <div>
-      <MapContainer center={[51.50, -0.07]} zoom={13} style={{ height: "600px", width: "100%" }}>
-        {bounds.length > 0 && imgURL && (
-          <ImageOverlay
-            url={imgURL}
-            bounds={bounds}
-          />
-        )}
-        {markers.map((marker, index) => {
-          if (marker.position && marker.position.lat !== undefined && marker.position.lng !== undefined) {
-            return (
-              <Marker 
-                key={index} 
-                position={marker.position} 
-                icon={createIcon(marker.color)}
-              >
-                <Popup>{`${marker.label}, ${marker.waitTime} minutes`}</Popup>
-              </Marker>
-            );
-          } else {
-            console.error('Invalid marker position:', marker.position);
-            return null;
-          }
-        })}
-      </MapContainer> 
-      
-      <div style={{ marginTop: '20px' }}>
-        <h2>Marker Details:</h2>
-        <ul style={{ listStyleType: 'none', padding: 0 }}>
-          {markers.map((marker, index) => (
-            <li key={index} style={{ marginBottom: '10px' }}>
-              <div>
-                <Box display="flex" alignItems="center" gap="10px">
-                  <h3>{marker.label} - </h3> 
-                  <h3 style={{fontWeight: "normal"}}>{marker.waitTime} minutes</h3>
-                </Box>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
+    <main>
+      <ResponsiveAppBar />
+      <Dashboard />
+    </main>
   );
-};
-
-export default MapLabeling;
+}

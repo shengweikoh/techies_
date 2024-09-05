@@ -1,25 +1,36 @@
 import React, { useState, useEffect } from 'react';
-import { MapContainer, ImageOverlay, Marker, Popup } from 'react-leaflet';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
+import dynamic from 'next/dynamic';
 import axios from 'axios';
+import { Box, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button } from '@mui/material';
 import Link from 'next/link';
-import { Box } from '@mui/material';
+
+// Dynamically import Leaflet components with SSR disabled
+const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false });
+const ImageOverlay = dynamic(() => import('react-leaflet').then(mod => mod.ImageOverlay), { ssr: false });
+const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { ssr: false });
+const Popup = dynamic(() => import('react-leaflet').then(mod => mod.Popup), { ssr: false });
+
+// Only require 'leaflet' and CSS if window is defined
+if (typeof window !== 'undefined') {
+  require('leaflet/dist/leaflet.css');
+  var L = require('leaflet');
+}
 
 const createIcon = (color) => {
-  return new L.DivIcon({
+  return L ? new L.DivIcon({
     className: 'color-circle-icon',
     html: `<div class="color-circle" style="background-color: ${color};"></div>`,
     iconSize: [20, 20],
-  });
+  }) : null;
 };
 
 const MapLabeling = ({ eventDocID, imgURL }) => {
   const [markers, setMarkers] = useState([]);
   const [bounds, setBounds] = useState([]);
   const [error, setError] = useState(null);
+  const [openPopup, setOpenPopup] = useState(false);
+  const [email, setEmail] = useState('');
 
-  // Fetch markers from API
   const fetchMapMarkers = async () => {
     try {
       if (!eventDocID) {
@@ -34,12 +45,13 @@ const MapLabeling = ({ eventDocID, imgURL }) => {
   };
 
   useEffect(() => {
-    fetchMapMarkers();
+    if (typeof window !== 'undefined') {
+      fetchMapMarkers();
+    }
   }, [eventDocID]);
 
-  // Set image bounds
   useEffect(() => {
-    if (imgURL) {
+    if (typeof window !== 'undefined' && imgURL) {
       const img = new Image();
       img.src = imgURL;
       img.onload = () => {
@@ -56,14 +68,12 @@ const MapLabeling = ({ eventDocID, imgURL }) => {
     }
   }, [imgURL]);
 
-  // Handle marker field changes
   const handleChange = (index, field, value) => {
     const updatedMarkers = [...markers];
     updatedMarkers[index] = { ...updatedMarkers[index], [field]: value };
     setMarkers(updatedMarkers);
   };
 
-  // Update markers on save button click
   const updateMarkers = async () => {
     try {
       if (!eventDocID) {
@@ -79,33 +89,59 @@ const MapLabeling = ({ eventDocID, imgURL }) => {
     }
   };
 
+  const handleAddStaffClick = () => {
+    setOpenPopup(true);
+  };
+
+  const handleAddStaff = async () => {
+    const userDocID = localStorage.getItem('userDocID');
+    if (!userDocID) {
+      throw new Error('User document ID not found in localStorage');
+    }
+    try {
+      const response = await axios.post(`http://localhost:8001/admin/assignStaff?adminID=${userDocID}`, {
+        staffEmail: email,
+        eventID: eventDocID
+      });
+      console.log('Staff added:', response.data);
+      setEmail('');
+      setOpenPopup(false);
+      alert('Staff successfully added!');
+    } catch (error) {
+      console.error('Error adding staff:', error);
+      alert('Error adding staff. Please try again.');
+    }
+  };
+
   return (
     <div>
-      <MapContainer center={[51.50, -0.07]} zoom={13} style={{ height: "600px", width: "100%" }}>
-        {bounds.length > 0 && imgURL && (
-          <ImageOverlay
-            url={imgURL} // Use the dynamic image URL here
-            bounds={bounds}
-          />
-        )}
-        {markers.map((marker, index) => {
-          if (marker.position && marker.position.lat !== undefined && marker.position.lng !== undefined) {
-            return (
-              <Marker 
-                key={index} 
-                position={marker.position} 
-                icon={createIcon(marker.color)}
-              >
-                <Popup>{`${marker.label}, ${marker.waitTime} minutes`}</Popup>
-              </Marker>
-            );
-          } else {
-            console.error('Invalid marker position:', marker.position);
-            return null;
-          }
-        })}
-      </MapContainer>
-      
+      {typeof window !== 'undefined' && (
+        <MapContainer center={[51.50, -0.07]} zoom={13} style={{ height: "600px", width: "100%" }}>
+          {bounds.length > 0 && imgURL && (
+            <ImageOverlay
+              url={imgURL}
+              bounds={bounds}
+            />
+          )}
+          {markers.map((marker, index) => {
+            if (marker.position && marker.position.lat !== undefined && marker.position.lng !== undefined) {
+              return (
+                <Marker
+                  key={index}
+                  position={marker.position}
+                  icon={createIcon(marker.color)}
+                >
+                  <Popup>{`${marker.label}, ${marker.waitTime} minutes`}</Popup>
+                </Marker>
+              );
+            } else {
+              console.error('Invalid marker position:', marker.position);
+              return null;
+            }
+          })}
+        </MapContainer>
+      )}
+
       {/* List marker names and wait times */}
       <div style={{ marginTop: '20px' }}>
         <h3>Marker Details:</h3>
@@ -136,12 +172,37 @@ const MapLabeling = ({ eventDocID, imgURL }) => {
           ))}
         </ul>
       </div>
-      
-      <div className='buttons-container'>
+
+      <Box display="flex" alignItems="center" gap="10px">
+        <button className='dashboard-button' onClick={handleAddStaffClick}>
+          Add Staff
+        </button>
         <button onClick={() => { updateMarkers() }} className='dashboard-button'>
           Save
         </button>
-      </div>
+      </Box>
+
+      {/* Add Staff Popup */}
+      <Dialog open={openPopup} onClose={() => setOpenPopup(false)}>
+        <DialogTitle>Add Staff</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="email"
+            label="Email Address"
+            type="email"
+            fullWidth
+            variant="standard"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenPopup(false)}>Cancel</Button>
+          <Button onClick={handleAddStaff}>Continue</Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
