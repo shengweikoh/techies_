@@ -41,16 +41,16 @@ app.get("/", (req, res) => {
 //app.use("/user/event", require("./routers/userEventRouter.js"));
 
 // for user to view profile
-app.use("/user", require("./routers/userProfileRouter.js"));
+app.use("/user", require("./routers/UserProfileRouter.js"));
 
 // for staff to view profile
-app.use("/staff", require("./routers/staffProfileRouter.js"));	
+app.use("/staff", require("./routers/StaffProfileRouter.js"));	
 
 // for admin to view profile 
-app.use("/admin", require("./routers/adminProfileRouter.js"));
+app.use("/admin", require("./routers/AdminProfileRouter.js"));
 
 // for all to view event detail - done
-app.use("/event/detail", require("./routers/eventDetailsRouter.js"));
+app.use("/event/detail", require("./routers/EventDetailsRouter.js"));
 
 // done
 app.use("/markers", require("./routers/markerUpdateRoute.js"));
