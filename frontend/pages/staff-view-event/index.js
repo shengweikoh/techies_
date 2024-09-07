@@ -17,7 +17,7 @@ import { Box } from "@mui/material";
 import { useRouter } from 'next/router';
 import axios from "axios";
 import dynamic from 'next/dynamic';
-
+import { url } from '../../src/app/firebase/firebase_config';
 
 const MapLabeling = dynamic(() => import('./MapLabeling'), { ssr: false });
 
@@ -36,7 +36,7 @@ export default function Page() {
       if (!eventDocID) {
         throw new Error('Event document ID not found in localStorage');
       }
-      const response = await axios.get(`http://localhost:8001/map?id=${eventDocID}`);
+      const response = await axios.get(`${url}/map?id=${eventDocID}`);
       console.log('API Response:', response.data.eventMapURL);
       setMapURL(response.data.eventMapURL);
     } catch (error) {
@@ -49,7 +49,7 @@ export default function Page() {
         if (!eventDocID) {
           throw new Error('Event document ID not found in localStorage');
         }
-        const response = await axios.get(`http://localhost:8001/event/detail?eventID=${eventDocID}`);
+        const response = await axios.get(`${url}/event/detail?eventID=${eventDocID}`);
         setEventDetails(response.data);
         console.log(response.data);
 

@@ -5,6 +5,7 @@ import ResponsiveAppBar from '../../components/admin-navbar/navbar';
 import Link from "next/link";
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import { url } from '../../src/app/firebase/firebase_config';
 
 export default function Page() {
     const router = useRouter();
@@ -40,7 +41,7 @@ export default function Page() {
         const fetchUserProfile = async () => {
             try {
               // Replace with the correct endpoint and parameters
-              const response = await axios.get(`http://localhost:8001/admin/profile?adminID=${userDocID}`);
+              const response = await axios.get(`${url}/admin/profile?adminID=${userDocID}`);
               
               console.log('User Profile:', response.data);
               setOrganiserName(response.data.adminName);
@@ -101,7 +102,7 @@ export default function Page() {
 
     try {
         console.log("INPUT>", eventData);
-      const response = await axios.post(`http://localhost:8001/markers/createEvent`, eventData, {
+      const response = await axios.post(`${url}/markers/createEvent`, eventData, {
         headers: {
             'Content-Type': 'application/json'
         }

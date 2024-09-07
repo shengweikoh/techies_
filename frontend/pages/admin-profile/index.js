@@ -3,6 +3,7 @@ import './page.css'; // Import the CSS file
 import ResponsiveAppBar from '../../components/admin-navbar/navbar';
 import axios from 'axios';
 import { useRouter } from 'next/router'; // Import useRouter for navigation
+import { url } from '../../src/app/firebase/firebase_config';
 
 export default function AdminProfilePage() {
     const router = useRouter(); // Initialize useRouter for navigation
@@ -23,7 +24,7 @@ export default function AdminProfilePage() {
                     return;
                 }
 
-                const response = await axios.get(`http://localhost:8001/admin/profile?adminID=${adminID}`);
+                const response = await axios.get(`${url}/admin/profile?adminID=${adminID}`);
                 const adminData = response.data;
 
                 // Update state with fetched data
@@ -62,7 +63,7 @@ export default function AdminProfilePage() {
             }
 
             console.log("INPUT>", profileData);
-            const response = await axios.post(`http://localhost:8001/admin/update?adminID=${adminID}`, profileData, {
+            const response = await axios.post(`${url}/admin/update?adminID=${adminID}`, profileData, {
                 headers: {
                     'Content-Type': 'application/json'
                 }

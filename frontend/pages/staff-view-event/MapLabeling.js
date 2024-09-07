@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic';
 import axios from 'axios';
 import { Box, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button } from '@mui/material';
 import Link from 'next/link';
+import { url } from '../../src/app/firebase/firebase_config';
 
 // Dynamically import Leaflet components with SSR disabled
 const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false });
@@ -36,7 +37,7 @@ const MapLabeling = ({ eventDocID, imgURL }) => {
       if (!eventDocID) {
         throw new Error('Event document ID not found');
       }
-      const response = await axios.get(`http://localhost:8001/markers/marker?eventID=${eventDocID}`);
+      const response = await axios.get(`${url}markers/marker?eventID=${eventDocID}`);
       console.log('API Response:', response.data);
       setMarkers(response.data.markers);
     } catch (error) {
@@ -79,7 +80,7 @@ const MapLabeling = ({ eventDocID, imgURL }) => {
       if (!eventDocID) {
         throw new Error('Event document ID not found');
       }
-      const response = await axios.post(`http://localhost:8001/markers/wait?eventID=${eventDocID}`, {
+      const response = await axios.post(`${url}/markers/wait?eventID=${eventDocID}`, {
         markers,
       });
       console.log('Markers successfully updated:', response.data);
@@ -99,7 +100,7 @@ const MapLabeling = ({ eventDocID, imgURL }) => {
       throw new Error('User document ID not found in localStorage');
     }
     try {
-      const response = await axios.post(`http://localhost:8001/admin/assignStaff?adminID=${userDocID}`, {
+      const response = await axios.post(`${url}/admin/assignStaff?adminID=${userDocID}`, {
         staffEmail: email,
         eventID: eventDocID
       });

@@ -6,6 +6,7 @@ import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import styles from './page.css';
 
+
 const EventCounter = ({ eventID }) => {
   const [count, setCount] = useState(0);
   const [loading, setLoading] = useState(true);

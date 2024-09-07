@@ -12,6 +12,7 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import { Box, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button } from "@mui/material";
 import axios from "axios";
 import { useRouter } from 'next/router';
+import { url } from '../../src/app/firebase/firebase_config';
 
 const EventCard = ({ event }) => {
   const startDateTime = new Date(event.startDateTime);
@@ -91,7 +92,7 @@ const Dashboard = () => {
       if (!userDocID) {
         throw new Error('User document ID not found in localStorage');
       }
-      const response = await axios.get(`http://localhost:8001/user/userSaved?userID=${userDocID}`);
+      const response = await axios.get(`${url}/user/userSaved?userID=${userDocID}`);
       console.log('API Response:', response.data);
       setSavedEventsData(response.data);
     } catch (error) {
@@ -105,7 +106,7 @@ const Dashboard = () => {
 
       const savedEventsDataPromises = savedEventsData.validUserEvent.map(async (eventID) => {
         try {
-          const response = await axios.get(`http://localhost:8001/event/detail?eventID=${eventID}`);
+          const response = await axios.get(`${url}/event/detail?eventID=${eventID}`);
           return response.data;
         } catch (err) {
           console.error(`Error fetching eventID ${eventID}:`, err);
@@ -129,7 +130,7 @@ const Dashboard = () => {
 
   const fetchEventsData = async () => {
     try {
-      const response = await axios.get(`http://localhost:8001/user/home`);
+      const response = await axios.get(`${url}/user/home`);
       console.log('API Response:', response.data);
       setEventsData(response.data);
     } catch (error) {

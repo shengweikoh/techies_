@@ -3,6 +3,7 @@ import './page.css'; // Import the CSS file
 import ResponsiveAppBar from '../../components/staff-navbar/navbar'; // Import the staff navbar
 import axios from 'axios';
 import { useRouter } from 'next/router'; // Import useRouter for navigation
+import { url } from '../../src/app/firebase/firebase_config';
 
 export default function StaffProfilePage() {
     const router = useRouter(); // Initialize useRouter for navigation
@@ -24,7 +25,7 @@ export default function StaffProfilePage() {
                     return;
                 }
 
-                const response = await axios.get(`http://localhost:8001/staff/profile?staffID=${staffID}`);
+                const response = await axios.get(`${url}/staff/profile?staffID=${staffID}`);
                 const staffData = response.data;
 
                 // Update state with fetched data
@@ -67,7 +68,7 @@ export default function StaffProfilePage() {
                 return;
             }
 
-            const response = await axios.post(`http://localhost:8001/staff/update?staffID=${staffID}`, profileData, {
+            const response = await axios.post(`${url}/staff/update?staffID=${staffID}`, profileData, {
                 headers: {
                     'Content-Type': 'application/json'
                 }

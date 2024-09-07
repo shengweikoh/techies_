@@ -3,6 +3,7 @@ import './page.css'; // Import the CSS file
 import ResponsiveAppBar from '../../components/user-navbar/navbar'; // Update to the user navbar
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import { url } from '../../src/app/firebase/firebase_config';
 
 export default function UserProfilePage() {
     const [userName, setUserName] = useState("");
@@ -26,7 +27,7 @@ export default function UserProfilePage() {
                     return;
                 }
 
-                const response = await axios.get(`http://localhost:8001/user/profile?userID=${userDocID}`);
+                const response = await axios.get(`${url}/user/profile?userID=${userDocID}`);
                 const userData = response.data;
 
                 // Update state with fetched data
@@ -73,7 +74,7 @@ export default function UserProfilePage() {
         try {
             console.log("INPUT>", profileData);
             const userDocID = localStorage.getItem('userDocID');
-            const response = await axios.post(`http://localhost:8001/user/update?userID=${userDocID}`, profileData, {
+            const response = await axios.post(`${url}/user/update?userID=${userDocID}`, profileData, {
                 headers: {
                     'Content-Type': 'application/json'
                 }

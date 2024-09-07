@@ -12,6 +12,8 @@ import { Box } from "@mui/material";
 import { useState, useEffect } from 'react';
 import axios from "axios";
 import { useRouter } from 'next/router';
+import { url } from '../../src/app/firebase/firebase_config';
+
 
 export default function Page() {
     const Dashboard = () => {
@@ -26,7 +28,7 @@ export default function Page() {
                     throw new Error('User document ID not found in localStorage');
                 }
                 console.log(userDocID);
-                const response = await axios.get(`http://localhost:8001/admin/adminEvent?adminID=${userDocID}`);
+                const response = await axios.get(`${url}/admin/adminEvent?adminID=${userDocID}`);
                 console.log('API Response:', response.data);
                 setAdminEvents(response.data);
             } catch (error) {
@@ -40,7 +42,7 @@ export default function Page() {
         
                 const adminEventsPromises = adminEvents.eventIDs.map(async (eventID) => {
                     try {
-                        const response = await axios.get(`http://localhost:8001/event/detail?eventID=${eventID}`);
+                        const response = await axios.get(`${url}/event/detail?eventID=${eventID}`);
                         return response.data;
                     } catch (err) {
                         console.error(`Error fetching eventID ${eventID}:`, err);

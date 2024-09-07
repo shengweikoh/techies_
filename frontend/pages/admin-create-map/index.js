@@ -9,6 +9,7 @@ import axios from 'axios';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import { url } from '../../src/app/firebase/firebase_config';
 
 // Dynamically import the MapLabeling component with SSR disabled
 const MapLabeling = dynamic(() => import('./MapLabeling'), { ssr: false });
@@ -57,7 +58,7 @@ export default function Page() {
                 console.log("File available at", profilePicURLS);
 
                 try {
-                    const response = await axios.post(`http://localhost:8001/map/update`, profilePicURLS, {
+                    const response = await axios.post(`${url}/map/update`, profilePicURLS, {
                         headers: {
                             'Content-Type': 'application/json',
                         },
