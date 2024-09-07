@@ -1,12 +1,9 @@
 {
   "name": "backend",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.0",
+  "main": "index.js",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "node app.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -17,7 +14,6 @@
     "react": "^18",
     "react-dom": "^18"
   },
-  "main": "index.js",
   "keywords": [],
   "author": "",
   "license": "ISC",
